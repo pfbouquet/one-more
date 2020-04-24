@@ -128,6 +128,15 @@ $('#sendMessageBtn').on("click", function () {
     sendTextMessage(message);
     // setVolume(0.1);
 });
+$('#sendSessionID').on("click", function () {
+    let session = cast.framework.CastContext.getInstance().getCurrentSession();
+    let sessionID = session.getSessionId();
+    console.log(sessionID);
+    sendTextMessage(sessionID);
+});
+$('#sendGameEventStart').on("click", function () {
+    sendData("game", {eventName: "test"});
+});
 $('#sendImages').on("click", sendImages);
 $('#kill').on('click', stopApp);
 

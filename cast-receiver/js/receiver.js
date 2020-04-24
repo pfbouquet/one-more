@@ -13,6 +13,9 @@ context.addCustomMessageListener(NAMESPACE, function (customEvent) {
         case "images":
             handleImages(customEvent.data.eventData);
             break;
+        case "game":
+            handleGameEvent(customEvent.data.eventData);
+            break;
         default:
             break;
     }
