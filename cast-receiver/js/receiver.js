@@ -38,6 +38,7 @@ function handleTextMessage(data) {
     console.log("reveived " + JSON.stringify(data));
     if (data.text != null) {
         $("#content").prepend('</br>' + data.text);
+        sendTextMessage("Message reçu : " + data.text);
     }
 }
 
@@ -47,4 +48,20 @@ function handleImages(data) {
             $("#content").prepend('</br>' + "<img src=\"" + image.url + "\"/>");
         });
     }
+}
+
+function onError(message) {
+    console.log('onError: ' + JSON.stringify(message));
+}
+
+function onSuccess(message) {
+    console.log('onSuccess: ' + JSON.stringify(message));
+}
+
+function sendDataToSenders(eventType, eventData) {
+    context.sendCustomMessage(NAMESPACE, undefined, { eventType: eventType, eventData: eventData });
+}
+
+function sendTextMessage(message) {
+    sendDataToSenders("text_message", {text: message});
 }
