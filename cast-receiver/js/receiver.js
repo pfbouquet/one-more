@@ -45,7 +45,15 @@ window.onload = function () {
 };
 
 function handleMessage(senderId, data) {
-    console.log(senderId + "has sent " + data.message);
+    console.log(senderId + "has sent " + JSON.stringify(data));
 
-    $("#content").append('</br>' + data.message);
+    if(data.message != null) {
+        $("#content").append('</br>' + data.message);
+    }
+
+    if(data.images != null) {
+        data.images.forEach(image => {
+            $("#content").append('</br>' + "<img src=\"" + image.url + "\"/>");
+        });
+    }
 }

@@ -80,9 +80,34 @@ function setVolume(volume) {
     session.setReceiverVolumeLevel(volume, function () { console.log("Volume set to " + volume) }, onError);
 }
 
+function sendImages() {
+    let data = {
+        "images" : [
+            {
+                "name": "Marathon",
+                "url": "https://media.giphy.com/media/URuzvsMZNVm2wRd9K3/giphy.gif"
+            },
+            {
+                "name": "Crayon",
+                "url": "https://images.assetsdelivery.com/compings_v2/yupiramos/yupiramos1712/yupiramos171209834.jpg"
+            },
+            {
+                "name": "Maison",
+                "url": "https://images.assetsdelivery.com/compings_v2/iriana88w/iriana88w1409/iriana88w140900821.jpg"
+            },
+            {
+                "name": "Tracteur",
+                "url": "https://images.assetsdelivery.com/compings_v2/stefan77/stefan771502/stefan77150200001.jpg"
+            },
+        ]
+    }
+    sendMessage(data);
+}
+
 $('#connectBtn').on("click", connect);
 $('#sendMessageBtn').on("click", function() {
     let text = $("#textMessageInput").val();
     sendMessage({ "message": text });
 });
+$('#sendImages').on("click", sendImages);
 $('#kill').on('click', stopApp);
