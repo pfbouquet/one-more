@@ -62,6 +62,9 @@ function initializeSession() {
                 case "text_message":
                     handleTextMessage(data.eventData);
                     break;
+                case "game":
+                    handleGameEvent(data.eventData);
+                    break;
                 default:
                     console.log(data.eventType);
                     break;
