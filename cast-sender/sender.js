@@ -2,87 +2,82 @@
  * Main JavaScript for handling Chromecast interactions.
  */
 
-var applicationID = '41EF74CE';
-var namespace = 'urn:x-cast:com.onemore';
+const applicationID = '41EF74CE';
+const namespace = 'urn:x-cast:com.onemore';
 var session = null;
 
-if (!chrome.cast || !chrome.cast.isAvailable) {
-    setTimeout(initializeCastApi, 1000);
-}
+window['__onGCastApiAvailable'] = function (isAvailable) {
+    if (isAvailable) {
+        initializeCastApi();
+    }
 
-function initializeCastApi() {
-    console.log("initializeCastApi");
-
-    var sessionRequest = new chrome.cast.SessionRequest(applicationID);
-    var apiConfig = new chrome.cast.ApiConfig(sessionRequest, sessionListener, receiverListener);
-    chrome.cast.initialize(apiConfig, onInitSuccess, onError);
+    var context = cast.framework.CastContext.getInstance();
+    context.addEventListener(
+        cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
+        function (event) {
+            switch (event.sessionState) {
+                case cast.framework.SessionState.SESSION_STARTED:
+                    console.log('CastSession started');
+                    break;
+                case cast.framework.SessionState.SESSION_RESUMED:
+                    console.log('CastSession resumed');
+                    break;
+                case cast.framework.SessionState.SESSION_ENDED:
+                    console.log('CastSession disconnected');
+                    break;
+            }
+        }
+    );
 };
 
-function onInitSuccess() {
-    console.log('onInitSuccess');
-}
+initializeCastApi = function () {
+    cast.framework.CastContext.getInstance().setOptions({
+        receiverApplicationId: applicationID,
+        autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+    });
+};
 
 function onError(message) {
     console.log('onError: ' + JSON.stringify(message));
 }
 
-function onStopAppSuccess() {
-    console.log('onStopAppSuccess');
+function onSuccess(message) {
+    console.log('onSuccess: ' + JSON.stringify(message));
 }
 
-function sessionListener(e) {
-    console.log('New session ID: ' + e.sessionId);
-    session = e;
-    console.log("session AppId = " + session.appId + ", status=" + session.status);
-    session.addUpdateListener(sessionUpdateListener);
-}
 
-function sessionUpdateListener(isAlive) {
-    console.log((isAlive ? 'Session Updated' : 'Session Removed') + ': ' + session.sessionId);
-    if (!isAlive) {
-        session = null;
+function sendData(data) {
+    var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+    if (castSession) {
+        castSession.sendMessage(namespace, data).then(function (e) {
+            onSuccess(e);
+        }).catch(function (e) {
+            onError(e);
+        });
     }
-};
-
-function receiverListener(e) {
-    console.log('Receiver listener' + e);
+    else
+        throw ('SESSION DOES NOT Exist !');
 }
 
-function stopApp() {
-    session.stop(onStopAppSuccess, onError);
-}
-
-function connect() {
-    console.log('connect()');
-
-    if (session != null) {
-        console.log("SESSION ALIVE !");
-    }
-    else {
-        chrome.cast.requestSession(function (e) {
-            session = e;
-            sessionListener(e);
-            setVolume(1);
-            sendMessage({ "message": "Let's go !" });
-        }, onError);
-    }
-}
-
-function sendMessage(message) {
-    session.sendMessage(namespace, message, onSuccessMessage.bind(this, message), onError);
-}
-
-function onSuccessMessage(message) {
-    console.log('Message - onSuccess: ' + JSON.stringify(message));
+function sendTextMessage(message) {
+    sendData({ type: "message", text: message });
 }
 
 function setVolume(volume) {
-    session.setReceiverVolumeLevel(volume, function () { console.log("Volume set to " + volume) }, onError);
+    var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+    if (castSession) {
+        castSession.setVolume(volume).then(function (e) {
+            onSuccess(e);
+        }).catch(function (e) {
+            onError(e);
+        });
+    }
 }
 
 function sendImages() {
     let data = {
-        "images" : [
+        type: "images",
+        images: [
             {
                 "name": "Marathon",
                 "url": "https://media.giphy.com/media/URuzvsMZNVm2wRd9K3/giphy.gif"
@@ -101,13 +96,22 @@ function sendImages() {
             },
         ]
     }
-    sendMessage(data);
+    sendData(data);
 }
 
-$('#connectBtn').on("click", connect);
-$('#sendMessageBtn').on("click", function() {
-    let text = $("#textMessageInput").val();
-    sendMessage({ "message": text });
+function stopApp() {
+    var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+    if (castSession)
+        castSession.endSession(true);
+}
+
+$('#sendMessageBtn').on("click", function () {
+    let message = $("#textMessageInput").val();
+    sendTextMessage(message);
+    // setVolume(0.1);
 });
 $('#sendImages').on("click", sendImages);
 $('#kill').on('click', stopApp);
+
+
+

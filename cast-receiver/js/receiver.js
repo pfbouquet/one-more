@@ -1,57 +1,44 @@
-/**
- * Main JavaScript for handling Chromecast interactions.
- */
+'use strict';
+const namespace = "urn:x-cast:com.onemore";
+const context = cast.framework.CastReceiverContext.getInstance();
 
-var namespace = "urn:x-cast:com.onemore";
+context.setLoggerLevel(cast.framework.LoggerLevel.DEBUG);
 
-window.onload = function () {
-    // LOG LEVEL : DEBUG
-    cast.receiver.logger.setLevelValue(0);
+context.addCustomMessageListener(namespace, function (customEvent) {
+    switch (customEvent.data.type) {
+        case "message":
+            handleTextMessage(customEvent.data);
+            break;
+        case "images":
+            handleImages(customEvent.data);
+            break;
+        default:
 
-    // GET INSTANCE
-    window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
-    console.log('Starting Receiver Manager');
-
-    // READY
-    castReceiverManager.onReady = function (event) {
-        console.log('Received Ready event: ' + JSON.stringify(event.data));
-        window.castReceiverManager.setApplicationState('one more is ready...');
-    };
-
-    // CONNECT
-    castReceiverManager.onSenderConnected = function (event) {
-        console.log('Received Sender Connected event: ' + event.senderId);
-    };
-
-    // DISCONNECT
-    castReceiverManager.onSenderDisconnected = function (event) {
-        console.log('Received Sender Disconnected event: ' + event.senderId);
-    };
-
-    // MESSAGE BUS
-    window.messageBus =
-        window.castReceiverManager.getCastMessageBus(
-            namespace, cast.receiver.CastMessageBus.MessageType.JSON);
-
-    // ON MESSAGE
-    window.messageBus.onMessage = function (event) {
-        console.log('Message [' + event.senderId + ']: ' + event.data);
-        handleMessage(event.senderId, event.data);
+            break;
     }
+});
 
-    // Initialize the CastReceiverManager with an application status message.
-    window.castReceiverManager.start({ statusText: 'Application is starting' });
-    console.log('Receiver Manager started');
-};
+context.addEventListener(cast.framework.system.EventType.SENDER_CONNECTED, function (event) {
+    console.log('Received Sender Connected event: ' + event.senderId);
+    context.setApplicationState("Player connected. Let's start a game !");
+});
 
-function handleMessage(senderId, data) {
-    console.log(senderId + "has sent " + JSON.stringify(data));
+context.addEventListener(cast.framework.system.EventType.READY, function (event) {
+    console.log('Received Ready event: ' + JSON.stringify(event.data));
+    context.setApplicationState('one more is ready...');
+});
 
-    if(data.message != null) {
-        $("#content").append('</br>' + data.message);
+context.start();
+
+function handleTextMessage(data) {
+    console.log("reveived " + JSON.stringify(data));
+    if (data.text != null) {
+        $("#content").append('</br>' + data.text);
     }
+}
 
-    if(data.images != null) {
+function handleImages(data) {
+    if (data.images != null) {
         data.images.forEach(image => {
             $("#content").append('</br>' + "<img src=\"" + image.url + "\"/>");
         });
