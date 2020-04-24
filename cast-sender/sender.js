@@ -3,11 +3,19 @@
  */
 
 const applicationID = '41EF74CE';
+// const applicationID = '90E7072E';
+
 const namespace = 'urn:x-cast:com.onemore';
 var session = null;
 
+$(document).ready(function () {
+    console.log("HELLO ! ")
+});
+
 window['__onGCastApiAvailable'] = function (isAvailable) {
     if (isAvailable) {
+        console.log("AVAILABLE");
+        // initAlert("Sélectionnez un chrome cast", "Bienvenue ! ", "success");
         initializeCastApi();
     }
 
@@ -24,6 +32,9 @@ window['__onGCastApiAvailable'] = function (isAvailable) {
                     break;
                 case cast.framework.SessionState.SESSION_ENDED:
                     console.log('CastSession disconnected');
+                    break;
+                default:
+                    console.log(JSON.stringify(event));
                     break;
             }
         }
@@ -45,22 +56,22 @@ function onSuccess(message) {
     console.log('onSuccess: ' + JSON.stringify(message));
 }
 
-
-function sendData(data) {
+function sendData(eventType, eventData) {
     var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
     if (castSession) {
-        castSession.sendMessage(namespace, data).then(function (e) {
+        castSession.sendMessage(namespace, { eventType: eventType, eventData: eventData }).then(function (e) {
             onSuccess(e);
         }).catch(function (e) {
             onError(e);
         });
     }
-    else
-        throw ('SESSION DOES NOT Exist !');
+    else {
+
+    }
 }
 
 function sendTextMessage(message) {
-    sendData({ type: "message", text: message });
+    sendData("text_message", {text: message});
 }
 
 function setVolume(volume) {
@@ -75,34 +86,41 @@ function setVolume(volume) {
 }
 
 function sendImages() {
-    let data = {
-        type: "images",
-        images: [
-            {
-                "name": "Marathon",
-                "url": "https://media.giphy.com/media/URuzvsMZNVm2wRd9K3/giphy.gif"
-            },
-            {
-                "name": "Crayon",
-                "url": "https://images.assetsdelivery.com/compings_v2/yupiramos/yupiramos1712/yupiramos171209834.jpg"
-            },
-            {
-                "name": "Maison",
-                "url": "https://images.assetsdelivery.com/compings_v2/iriana88w/iriana88w1409/iriana88w140900821.jpg"
-            },
-            {
-                "name": "Tracteur",
-                "url": "https://images.assetsdelivery.com/compings_v2/stefan77/stefan771502/stefan77150200001.jpg"
-            },
-        ]
-    }
-    sendData(data);
+    let data = {"images" : [
+        {
+            "name": "Marathon",
+            "url": "https://media.giphy.com/media/URuzvsMZNVm2wRd9K3/giphy.gif"
+        },
+        {
+            "name": "Crayon",
+            "url": "https://images.assetsdelivery.com/compings_v2/yupiramos/yupiramos1712/yupiramos171209834.jpg"
+        },
+        {
+            "name": "Maison",
+            "url": "https://images.assetsdelivery.com/compings_v2/iriana88w/iriana88w1409/iriana88w140900821.jpg"
+        },
+        {
+            "name": "Tracteur",
+            "url": "https://images.assetsdelivery.com/compings_v2/stefan77/stefan771502/stefan77150200001.jpg"
+        },
+    ]};
+    sendData("images", data);
 }
 
 function stopApp() {
     var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
     if (castSession)
         castSession.endSession(true);
+}
+
+function initAlert(message, title, type = "danger") {
+    var cls = 'alert-' + type;
+    var html = '<div class="alert ' + cls + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+    if (typeof title !== 'undefined' && title !== '') {
+        html += '<h4>' + title + '</h4>';
+    }
+    html += '<span>' + message + '</span></div>';
+    $('#alert_placeholder').html(html);
 }
 
 $('#sendMessageBtn').on("click", function () {

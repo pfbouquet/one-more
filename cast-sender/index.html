@@ -11,7 +11,13 @@
 
 <body>
 	<div class="container">
+		<!-- ALERT -->
+		<div id="alert_placeholder"></div> 
+
+		<!-- GOOGLE CAST LAUNCHER -->
 		<google-cast-launcher></google-cast-launcher>
+
+		<!-- MY CONTENT -->
 		<p>
 			<label>Message <input type="text" id="textMessageInput" placeholder="Hello world !"></label>
 			<button id="sendMessageBtn">Send</button>
@@ -24,16 +30,22 @@
 	</div>
 </body>
 
+<!-- JQUERY -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
 	integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
 	crossorigin="anonymous"></script>
+<!-- POPPER - require by bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
 	integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
 	crossorigin="anonymous"></script>
+<!-- BOOTSTRAP -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
 	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
 	crossorigin="anonymous"></script>
-	<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+<!-- GOOGLE CAST SENDER -->
+<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+
+<!-- OUR SCRIPT FILES -->
 <script src="sender.js"></script>
 
 </html>
