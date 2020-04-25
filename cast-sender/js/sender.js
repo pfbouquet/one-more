@@ -44,7 +44,7 @@ window['__onGCastApiAvailable'] = function (isAvailable) {
 };
     
 function initializeCastApi() {
-    console.log("Initializing with applicationID= " + applicationID);
+    console.log("Initializing with applicationID=" + applicationID);
     cast.framework.CastContext.getInstance().setOptions({
         receiverApplicationId: applicationID,
         autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
