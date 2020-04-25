@@ -63,6 +63,9 @@ function initializeSession() {
                 case "text_message":
                     handleTextMessage(data.eventData);
                     break;
+                case "ready":
+                    console.log("Connected, display player form");
+                    break;
                 case "game":
                     handleGameEvent(data.eventData);
                     break;
@@ -71,6 +74,7 @@ function initializeSession() {
                     break;
             }
         });
+        console.log("Cast is ready, ")
     }
     else{
         console.log("Session is not set");
