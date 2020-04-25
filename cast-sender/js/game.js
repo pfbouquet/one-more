@@ -26,7 +26,8 @@ function handleGameEvent(data) {
 }
 
 function sendGameEvent(eventName, infos) {
-    sendData("game", {'eventName': eventName, infos})
+    infos.eventName = eventName;
+    sendData("game", infos)
 }
 
 function displayPlayerForm() {
@@ -44,7 +45,7 @@ function startGameEvent() {
       }
     }
     console.log(players);
-    sendGameEvent("start-game", players)
+    sendGameEvent("start-game", {players: players})
 }
 
 $('#startGame').on("click", startGameEvent);
