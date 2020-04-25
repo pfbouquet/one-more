@@ -16,20 +16,25 @@
 
 		<!-- GOOGLE CAST LAUNCHER -->
 		<google-cast-launcher></google-cast-launcher>
+		<button id="kill">Stop casting</button>
 
 		<!-- MY CONTENT -->
-		<p>
-			<label>Message <input type="text" id="textMessageInput" placeholder="Hello world !"></label>
-			<button id="sendMessageBtn">Send</button>
-		</p>
-		<p>
-			Send images
-			<button id="sendImages">Send images</button>
-		</p>
-		<button id="kill">Stop casting</button>
-		<button id="sendSessionID">Session ID !</button>
-		<button id="sendGameEventStart">Test game event</button>
-
+		<div id="game" style="display: none">
+			GAME IS HERE
+			<div id="playerForm" style="display: none">
+				PLAYER FORM IS HERE<br>
+				<div id="playerFormData">
+					<input type="text" id="player1"><br>
+					<input type="text" id="player2"><br>
+					<input type="text" id="player3"><br>
+					<input type="text" id="player4"><br>
+					<input type="text" id="player5"><br>
+					<input type="text" id="player6"><br>
+					<input type="text" id="player7"><br>
+				</div>
+				<button id="startGame">Start the game!</button>
+			</div>
+		</div>
 	</div>
 </body>
 

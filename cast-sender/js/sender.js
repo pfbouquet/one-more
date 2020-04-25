@@ -27,10 +27,11 @@ window['__onGCastApiAvailable'] = function (isAvailable) {
                 case cast.framework.SessionState.SESSION_STARTED:
                     console.log('CastSession started');
                     initializeSession();
+                    initializeGame();
                     break;
                 case cast.framework.SessionState.SESSION_RESUMED:
                     console.log('CastSession resumed');
-                    initializeSession()
+                    initializeSession();
                     break;
                 case cast.framework.SessionState.SESSION_ENDED:
                     console.log('CastSession disconnected');
@@ -62,9 +63,6 @@ function initializeSession() {
             switch (data.eventType) {
                 case "text_message":
                     handleTextMessage(data.eventData);
-                    break;
-                case "ready":
-                    console.log("Connected, display player form");
                     break;
                 case "game":
                     handleGameEvent(data.eventData);
@@ -166,22 +164,14 @@ function handleTextMessage(data) {
     }
 }
 
-$('#sendMessageBtn').on("click", function () {
-    let message = $("#textMessageInput").val();
-    sendTextMessage(message);
-    // setVolume(0.1);
-});
-$('#sendSessionID').on("click", function () {
-    let session = cast.framework.CastContext.getInstance().getCurrentSession();
-    let sessionID = session.getSessionId();
-    console.log(sessionID);
-    sendTextMessage(sessionID);
-});
-$('#sendGameEventStart').on("click", function () {
-    sendData("game", {eventName: "test"});
-});
-$('#sendImages').on("click", sendImages);
-$('#kill').on('click', stopApp);
+function kill() {
+    leaveGame();
+    stopApp()
+}
+//$('#sendMessageBtn').on("click", function () {
+//    let message = $("#textMessageInput").val();
+//    sendTextMessage(message);
+//    // setVolume(0.1);
+//});
 
-
-
+$('#kill').on('click', kill);
