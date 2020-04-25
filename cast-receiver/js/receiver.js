@@ -65,3 +65,18 @@ function sendDataToSenders(eventType, eventData) {
 function sendTextMessage(message) {
     sendDataToSenders("text_message", {text: message});
 }
+
+function sendError(message) {
+    sendDataToSenders("error_message", {message: message});
+}
+
+/**
+ *
+ * @param array
+ */
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}

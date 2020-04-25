@@ -68,7 +68,7 @@ function initializeSession() {
                     handleGameEvent(data.eventData);
                     break;
                 default:
-                    console.log(data.eventType);
+                    console.log(JSON.stringify(data));
                     break;
             }
         });
