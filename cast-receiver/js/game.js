@@ -59,7 +59,6 @@ function handleGameEvent(data) {
  */
 function startGame(__players) {
     try {
-        console.log("HELLO ! ");
         players = __players;
         if(Array.isArray(players)) {
             throw new Error("player list is not correct.");
@@ -79,9 +78,6 @@ function startGame(__players) {
         }
 
         prepareRound();
-
-        console.log(players);
-        updatePlayerList();
     } catch(exception) {
         sendError(exception.message);
     }
@@ -91,6 +87,8 @@ function startGame(__players) {
  *
  */
 function prepareRound() {
+    updateRoundNumber();
+
     // Get an array of player key
     let roleNumber = 0;
     let roles = getRoles(Object.entries(players).length);
@@ -105,10 +103,8 @@ function prepareRound() {
             roleNumber++;
         }
     }
-    console.log(players);
-
     sendGameEvent("round-info", {players: players});
-
+    updatePlayerList(true);
 }
 
 function getRoles(playerNumber) {
@@ -134,7 +130,7 @@ function getRoles(playerNumber) {
     }
 }
 
-function updatePlayerList(withColor = false) {
+function updatePlayerList(showPlayerRole = false) {
     let playerArray = getSortedPlayerArray();
 
     let playerList = $('#playerList');
@@ -142,36 +138,41 @@ function updatePlayerList(withColor = false) {
     playerList.show();
     playerList.append("<div class='list-group-item list-group-item-action active'> players (" + playerArray.length + ")</div>");
     for(const [key, player] of playerArray) {
-        let color= "black"
-        if(withColor) {
+        let contextualClass= "black"
+        let roleName = "";
+        if(showPlayerRole) {
             switch (player.role) {
                 case ROLE_TURNCOAT:
-                    color = "black";
+                    contextualClass = "list-group-item-warning";
+                    roleName = "Turncoat";
                     break;
                 case ROLE_DEVIL:
-                    color = "red";
+                    contextualClass = "list-group-item-danger";
+                    roleName ="Devil";
                     break;
                 case ROLE_ANGEL:
-                    color = "green";
+                    contextualClass = "list-group-item-success";
+                    roleName = "Angel";
                     break;
                 case ROLE_SAINT_PETER:
-                    color = "blue";
+                    contextualClass = "list-group-item-secondary";
+                    roleName ="Saint Peter";
                     break;
             }
         }
-        playerList.append("<div class='list-group-item list-group-item-action' style='color: " + color + "'>" + player.name + " : " + player.score + "</div>");
-        console.log("KEY = " + key);
+        playerList.append("<div class='list-group-item list-group-item-action " + contextualClass + "'>" + player.name + " : " + player.score + "</div>");
     }
+}
+
+function updateRoundNumber() {
+    $('#round-info').html("<i>round " + roundNumber + "</i>");
 }
 
 function getSortedPlayerArray() {
     let playerArray = Object.entries(players);
-
     playerArray.sort(function(a, b) {
-        console.log(a[1].score + " - " + b[1].score + " = " + (a[1].score - b[1].score));
         return  b[1].score - a[1].score;
     })
-
     return playerArray;
 }
 
