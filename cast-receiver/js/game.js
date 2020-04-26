@@ -13,6 +13,9 @@ const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
 
 let players;
 let roundNumber;
+let keyword;
+let correctKeywords = [];
+let wrongKeywords = [];
 
 /**
  *
@@ -43,9 +46,9 @@ function handleGameEvent(data) {
             console.log("Launching game event " + data.eventName);
             displayLaunchGame();
             break;
-        case "newKeyword":
-            console.log("Launching game event " + data.eventName);
-            displayKeyword(data.keyword);
+        case "start-round":
+            displayRound();
+            startRound();
             break;
         case "correct":
             console.log("Launching game event " + data.eventName);
@@ -142,12 +145,12 @@ function getRoles(playerNumber) {
 
 function displayGetReadyMessage(){
     let saintThomas = getSaintThomas();
-    $("#game-content").html("<h2>" + saintThomas.name + " you are Saint Thomas for this round. Go blind ! </h2><br/><h4>When Saint Thomas is blind, hit ready ! </h4>")
+    $("#game-instruction").html("<h2>" + saintThomas.name + " you are Saint Thomas for this round. Go blind ! </h2><br/><h4>When Saint Thomas is blind, hit ready ! </h4>")
 }
 
 function displayLaunchGame(){
     updatePlayerList(true);
-    $("#game-content").html("<h2>Watch your personal role for this round. </h2><br/><h4>When everyone is ready, click on the button the start the round ! </h4>")
+    $("#game-instruction").html("<h2>Watch your personal role for this round. </h2><br/><h4>When everyone is ready, click on the button the start the round ! </h4>")
 }
 
 function getSaintThomas(){
@@ -203,18 +206,40 @@ function getSortedPlayerArray() {
     return playerArray;
 }
 
+function displayRound() {
+    // Hide instruction
+    $("#game-instruction").hide();
+
+    wrongKeywords = [];
+    correctKeywords = [];
+
+    // Clean
+    $("#keywordCorrect").html("");
+    $("#keywordWrong").html("");
+
+    // Show main-round
+    $("#main-round").show();
+}
+
+function startRound() {
+    // TODO: init timer
+
+    // 1st word
+    keywordNew();
+}
+
 /**
  * word management
  */
 function keywordCorrect() {
-    let keyword = $("#inputKeyword").html();
     $("#keywordCorrect").append("<p>"+keyword+"</p>");
+    correctKeywords.push(keyword);
     keywordNew();
 }
 
 function keywordWrong() {
-    let keyword = $("#inputKeyword").html();
     $("#keywordWrong").append("<p>"+keyword+"</p>");
+    wrongKeywords.push(keyword);
     keywordNew();
 }
 
@@ -223,8 +248,7 @@ function keywordNew() {
         keywordArrayCursor = 0;
         shuffle(keywordArray);
     }
-    let keyword = keywordArray[keywordArrayCursor];
-    console.log(keyword);
+    keyword = keywordArray[keywordArrayCursor];
     // replace HTTML
     $("#keyword").html("<p id='inputKeyword'>"+keyword+"</p>");
     keywordGif(keyword);

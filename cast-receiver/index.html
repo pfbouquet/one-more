@@ -10,12 +10,16 @@
 <body>
 <div class="container" id="app">
     <h1 class="text-center">One More...</h1>
-    <div id="game" class="row text-center">
-        <div id="game-content" class="col-md-10">
-            Start the game
-            <div id="keywordWrong" class="col-md-2"></div>
-            <div id="keyword" class="col-md-8"></div>
-            <div id="keywordCorrect" class="col-md-2"></div>
+    <div class="row text-center">
+        <div id="game" class="col-md-10">
+            <div id="game-instruction">
+                Start the game
+            </div>
+            <div id="main-round" class="row" style="display: none">
+                <div id="keywordWrong" class="col-md-2"></div>
+                <div id="keyword" class="col-md-6"></div>
+                <div id="keywordCorrect" class="col-md-2"></div>
+            </div>
         </div>
         <div id="game-infos" class="col-md-2 list-group">
             <div id="round-info"></div>
