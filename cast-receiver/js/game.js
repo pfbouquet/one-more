@@ -1,9 +1,9 @@
 const MINIMUM_PLAYER = 4;
 
-const ROLE_ANGEL = "ANGEL";
-const ROLE_DEVIL = "DEVIL";
-const ROLE_TURNCOAT = "TURNCOAT";
-const ROLE_SAINT_PETER = "SAINT_PETER";
+const ROLE_ANGEL = "Angel";
+const ROLE_DEVIL = "Devil";
+const ROLE_TURNCOAT = "Turncoat";
+const ROLE_SAINT_THOMAS = "Saint_Thomas";
 
 const KEYWORD_BASE = ['tracteur', 'crayon', 'chat', 'chien', 'vache', 'corona', 'scientifique'];
 const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
@@ -34,6 +34,10 @@ function handleGameEvent(data) {
         case "start-game":
             console.log("Launching game event " + data.eventName);
             startGame(data.players);
+            break;
+        case "saint-thomas-bind" :
+            console.log("Launching game event " + data.eventName);
+            displayLaunchGame();
             break;
         case "newKeyword":
             console.log("Launching game event " + data.eventName);
@@ -96,15 +100,17 @@ function prepareRound() {
 
     for(const [key, player] of Object.entries(players)) {
         if(roundNumber === player.dreamerOrder) {
-            players[key].role = ROLE_SAINT_PETER;
+            players[key].role = ROLE_SAINT_THOMAS;
         }
         else {
             players[key].role = roles[roleNumber];
             roleNumber++;
         }
     }
+    updatePlayerList(false);
+
+    displayGetReadyMessage();
     sendGameEvent("round-info", {players: players});
-    updatePlayerList(true);
 }
 
 function getRoles(playerNumber) {
@@ -130,6 +136,24 @@ function getRoles(playerNumber) {
     }
 }
 
+function displayGetReadyMessage(){
+    let saintThomas = getSaintThomas();
+    $("#game-content").html("<h2>" + saintThomas.name + " you are Saint Thomas for this round. Go blind ! </h2><br/><h4>When Saint Thomas is blind, hit ready ! </h4>")
+}
+
+function displayLaunchGame(){
+    updatePlayerList(true);
+    $("#game-content").html("<h2>Watch your personal role for this round. </h2><br/><h4>When everyone is ready, click on the button the start the round ! </h4>")
+}
+
+function getSaintThomas(){
+    for(const [key, player] of Object.entries(players)) {
+        if(player.role === ROLE_SAINT_THOMAS) {
+            return player;
+        }
+    }
+}
+
 function updatePlayerList(showPlayerRole = false) {
     let playerArray = getSortedPlayerArray();
 
@@ -144,19 +168,15 @@ function updatePlayerList(showPlayerRole = false) {
             switch (player.role) {
                 case ROLE_TURNCOAT:
                     contextualClass = "list-group-item-warning";
-                    roleName = "Turncoat";
                     break;
                 case ROLE_DEVIL:
                     contextualClass = "list-group-item-danger";
-                    roleName ="Devil";
                     break;
                 case ROLE_ANGEL:
                     contextualClass = "list-group-item-success";
-                    roleName = "Angel";
                     break;
-                case ROLE_SAINT_PETER:
+                case ROLE_SAINT_THOMAS:
                     contextualClass = "list-group-item-secondary";
-                    roleName ="Saint Peter";
                     break;
             }
         }
