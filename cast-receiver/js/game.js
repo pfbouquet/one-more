@@ -5,6 +5,9 @@ const ROLE_DEVIL = "DEVIL";
 const ROLE_TURNCOAT = "TURNCOAT";
 const ROLE_SAINT_PETER = "SAINT_PETER";
 
+const KEYWORD_BASE = ['tracteur', 'crayon', 'chat', 'chien', 'vache', 'corona', 'scientifique'];
+const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
+
 let players;
 let roundNumber;
 
@@ -13,9 +16,10 @@ let roundNumber;
  * @param eventName
  * @param infos
  */
-function sendGameData(eventName, infos) {
+
+function sendGameEvent(eventName, infos) {
     infos.eventName = eventName;
-    sendDataToSenders("text_message", eventName);
+    sendDataToSenders("game", infos)
 }
 
 /**
@@ -30,6 +34,18 @@ function handleGameEvent(data) {
         case "start-game":
             console.log("Launching game event " + data.eventName);
             startGame(data.players);
+            break;
+        case "newKeyword":
+            console.log("Launching game event " + data.eventName);
+            displayKeyword(data.keyword);
+            break;
+        case "correct":
+            console.log("Launching game event " + data.eventName);
+            keywordCorrect();
+            break;
+        case "wrong":
+            console.log("Launching game event " + data.eventName);
+            keywordWrong();
             break;
         default:
             console.log("Launching game event " + data.eventName);
@@ -91,7 +107,7 @@ function prepareRound() {
     }
     console.log(players);
 
-    sendGameData("round-info", {players: players});
+    sendGameEvent("round-info", {players: players});
 
 }
 
@@ -157,4 +173,43 @@ function getSortedPlayerArray() {
     })
 
     return playerArray;
+}
+
+/**
+ * word management
+ */
+function keywordCorrect() {
+    let keyword = $("#inputKeyword").val();
+    $("#keywordCorrect").prepend("<p>"+keyword+"</p>");
+    keywordNew()
+}
+
+function keywordWrong() {
+    let keyword = $("#inputKeyword").val();
+    $("#keywordWrong").prepend("<p>"+keyword+"</p>");
+    keywordNew()
+}
+
+function keywordNew() {
+    let keyword = _.sample(KEYWORD_BASE);
+    // replace HTTML
+    $("#keyword").html("<p>"+keyword+"</p>");
+    keywordGif(keyword)
+}
+
+function keywordGif(keyword) {
+    // get and display image
+    fetch('https://api.giphy.com/v1/gifs/search?api_key=' + GIPHY_API_KEY + '&q=' + keyword + '&limit=1&offset=0&rating=G&lang=fr')
+        .then(data => {
+            return data.json()
+        })
+        .then(res => {
+            gif_url = res.data[0].images.fixed_height.url;
+            console.log('Gif for '+keyword+': '+ gif_url);
+            $("#keyword").prepend('</br>' + "<img src=\"" + gif_url + "\"/>");
+        })
+        .then(sendGameEvent("newKeyword", {keyword: keyword}))
+        .catch(error => {
+            console.log(error)
+        })
 }
