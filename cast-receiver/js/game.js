@@ -5,7 +5,10 @@ const ROLE_DEVIL = "DEVIL";
 const ROLE_TURNCOAT = "TURNCOAT";
 const ROLE_SAINT_PETER = "SAINT_PETER";
 
-const KEYWORD_BASE = ['tracteur', 'crayon', 'chat', 'chien', 'vache', 'corona', 'scientifique'];
+let keywordArray = ['tracteur', 'crayon', 'chat', 'chien', 'vache', 'corona', 'scientifique'];
+let keywordArrayCursor = 0;
+shuffle(keywordArray);
+
 const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
 
 let players;
@@ -192,10 +195,17 @@ function keywordWrong() {
 }
 
 function keywordNew() {
-    let keyword = _.sample(KEYWORD_BASE);
+    if (keywordArrayCursor >= keywordArray.length) {
+        keywordArrayCursor = 0;
+        shuffle(keywordArray);
+    }
+    let keyword = keywordArray[keywordArrayCursor];
+    console.log(keyword)
     // replace HTTML
     $("#keyword").html("<p>"+keyword+"</p>");
-    keywordGif(keyword)
+    keywordGif(keyword);
+    sendGameEvent("newKeyword", {keyword: keyword});
+    keywordArrayCursor++
 }
 
 function keywordGif(keyword) {
@@ -209,7 +219,6 @@ function keywordGif(keyword) {
             console.log('Gif for '+keyword+': '+ gif_url);
             $("#keyword").prepend('</br>' + "<img src=\"" + gif_url + "\"/>");
         })
-        .then(sendGameEvent("newKeyword", {keyword: keyword}))
         .catch(error => {
             console.log(error)
         })
