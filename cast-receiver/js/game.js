@@ -5,6 +5,7 @@ const ROLE_DEVIL = "DEVIL";
 const ROLE_TURNCOAT = "TURNCOAT";
 const ROLE_SAINT_PETER = "SAINT_PETER";
 
+const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
 let players;
 let roundNumber;
 
@@ -138,4 +139,25 @@ function getRoles(playerNumber) {
         case 12:
             return [ROLE_ANGEL, ROLE_ANGEL, ROLE_ANGEL, ROLE_ANGEL, ROLE_ANGEL, ROLE_DEVIL, ROLE_DEVIL, ROLE_DEVIL, ROLE_DEVIL, ROLE_TURNCOAT, ROLE_TURNCOAT, ROLE_TURNCOAT];
     }
+}
+
+/**
+ * word management
+ */
+function displayKeyword(keyword) {
+    // replace HTTML
+    $("#keyword").html("<p>"+keyword+"</p>");
+    // get and display image
+    fetch('https://api.giphy.com/v1/gifs/search?api_key=' + GIPHY_API_KEY + '&q=' + keyword + '&limit=1&offset=0&rating=G&lang=fr')
+        .then(data => {
+            return data.json()
+        })
+        .then(res => {
+            gif_url = res.data[0].images.fixed_height.url;
+            console.log('Gif for '+keyword+': '+ gif_url);
+            $("#keyword").prepend('</br>' + "<img src=\"" + gif_url + "\"/>");
+        })
+        .catch(error => {
+            console.log(error)
+        })
 }

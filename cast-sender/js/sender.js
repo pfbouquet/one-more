@@ -2,8 +2,8 @@
  * Main JavaScript for handling Chromecast interactions.
  */
 
-const applicationID = '41EF74CE';
-//const applicationID = '90E7072E';
+//const applicationID = '41EF74CE';
+const applicationID = '90E7072E';
 
 const NAMESPACE = 'urn:x-cast:com.onemore';
 var session = null;
