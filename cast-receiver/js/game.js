@@ -5,7 +5,10 @@ const ROLE_DEVIL = "Devil";
 const ROLE_TURNCOAT = "Turncoat";
 const ROLE_SAINT_THOMAS = "Saint_Thomas";
 
-const KEYWORD_BASE = ['tracteur', 'crayon', 'chat', 'chien', 'vache', 'corona', 'scientifique'];
+let keywordArray = ['tracteur', 'crayon', 'chat', 'chien', 'vache', 'corona', 'scientifique'];
+let keywordArrayCursor = 0;
+shuffle(keywordArray);
+
 const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
 
 let players;
@@ -18,6 +21,7 @@ let roundNumber;
  */
 
 function sendGameEvent(eventName, infos) {
+    console.log('Sending event '+eventName)
     infos.eventName = eventName;
     sendDataToSenders("game", infos)
 }
@@ -190,9 +194,12 @@ function updateRoundNumber() {
 
 function getSortedPlayerArray() {
     let playerArray = Object.entries(players);
+
     playerArray.sort(function(a, b) {
+        console.log(a[1].score + " - " + b[1].score + " = " + (a[1].score - b[1].score));
         return  b[1].score - a[1].score;
     })
+
     return playerArray;
 }
 
@@ -202,20 +209,27 @@ function getSortedPlayerArray() {
 function keywordCorrect() {
     let keyword = $("#inputKeyword").val();
     $("#keywordCorrect").prepend("<p>"+keyword+"</p>");
-    keywordNew()
+    keywordNew();
 }
 
 function keywordWrong() {
     let keyword = $("#inputKeyword").val();
     $("#keywordWrong").prepend("<p>"+keyword+"</p>");
-    keywordNew()
+    keywordNew();
 }
 
 function keywordNew() {
-    let keyword = _.sample(KEYWORD_BASE);
+    if (keywordArrayCursor >= keywordArray.length) {
+        keywordArrayCursor = 0;
+        shuffle(keywordArray);
+    }
+    let keyword = keywordArray[keywordArrayCursor];
+    console.log(keyword);
     // replace HTTML
-    $("#keyword").html("<p>"+keyword+"</p>");
-    keywordGif(keyword)
+    $("#keyword").html("<p id='inputKeyword'>"+keyword+"</p>");
+    keywordGif(keyword);
+    sendGameEvent("newKeyword", {keyword: keyword});
+    keywordArrayCursor++
 }
 
 function keywordGif(keyword) {
@@ -229,7 +243,6 @@ function keywordGif(keyword) {
             console.log('Gif for '+keyword+': '+ gif_url);
             $("#keyword").prepend('</br>' + "<img src=\"" + gif_url + "\"/>");
         })
-        .then(sendGameEvent("newKeyword", {keyword: keyword}))
         .catch(error => {
             console.log(error)
         })

@@ -17,26 +17,26 @@ function leaveGame() {
 }
 
 function handleGameEvent(data) {
+    console.log("Received game event:" + data.eventName);
     switch (data.eventName) {
         case undefined:
             console.log("Game events need an eventName");
             break;
         case "Start":
-            console.log("Launching game event " + data.eventName);
             break;
         case "newKeyword":
-            console.log("Launching game event " + data.eventName);
+            showKeyword(data.keyword);
+            break;
         case "round-info":
-            console.log("Round information received");
             handleRoundInfo(data);
             break;
         default:
-            console.log("Launching game event " + data.eventName);
             break;
     }
 }
 
 function sendGameEvent(eventName, infos) {
+    console.log('Sending event '+eventName);
     infos.eventName = eventName;
     sendData("game", infos)
 }

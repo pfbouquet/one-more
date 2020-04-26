@@ -57,9 +57,8 @@ function initializeSession() {
     if (castSession) {
         console.log("Add new message listener to " + castSession.getSessionId());
         castSession.addMessageListener(NAMESPACE, function (namespace, message) {
-            console.log(JSON.stringify(namespace));
-            data = JSON.parse(message);
-
+            let data = JSON.parse(message);
+            console.log("received event: "+JSON.stringify(data));
             switch (data.eventType) {
                 case "text_message":
                     handleTextMessage(data.eventData);
