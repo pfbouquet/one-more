@@ -19,6 +19,9 @@ function handleGameEvent(data) {
         case "Start":
             console.log("Launching game event " + data.eventName);
             break;
+        case "newKeyword":
+            console.log("Launching game event " + data.eventName);
+
         default:
             console.log("Launching game event " + data.eventName);
             break;
@@ -48,11 +51,22 @@ function startGameEvent() {
     sendGameEvent("start-game", {players: players})
 }
 
-function showKeyword() {
-    let keyword = $("#inputKeyword").val();
-    sendGameEvent("newKeyword", {keyword: keyword})
+function showKeyword(keyword) {
+    $("#inputKeyword").html(keyword);
+}
+
+function sendCorrect() {
+    sendGameEvent("correct", {})
+}
+
+function sendWrong() {
+    sendGameEvent("wrong", {})
 }
 
 $('#startGame').on("click", startGameEvent);
 
 $('#showKeyword').on('click', showKeyword);
+
+$('#correct').on('click', sendCorrect);
+
+$('#wrong').on('click', sendWrong);

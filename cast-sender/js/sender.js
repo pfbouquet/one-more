@@ -168,6 +168,7 @@ function kill() {
     leaveGame();
     stopApp()
 }
+
 //$('#sendMessageBtn').on("click", function () {
 //    let message = $("#textMessageInput").val();
 //    sendTextMessage(message);
