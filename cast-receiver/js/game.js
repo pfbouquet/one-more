@@ -200,9 +200,9 @@ function keywordNew() {
         shuffle(keywordArray);
     }
     let keyword = keywordArray[keywordArrayCursor];
-    console.log(keyword)
+    console.log(keyword);
     // replace HTTML
-    $("#keyword").html("<p>"+keyword+"</p>");
+    $("#keyword").html("<p id='inputKeyword'>"+keyword+"</p>");
     keywordGif(keyword);
     sendGameEvent("newKeyword", {keyword: keyword});
     keywordArrayCursor++
