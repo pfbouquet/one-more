@@ -53,41 +53,19 @@ function startGame(__players) {
             throw new Error("Must have 4 players or more.");
         }
 
-        let playerList = $('#playerList');
-        playerList.html("");
-        playerList.show();
-
         roundNumber = 1;
 
         let dreamerOrder=1;
         for(const [key, player] of Object.entries(players)) {
             players[key].dreamerOrder = dreamerOrder;
+            players[key].score = 0;
             dreamerOrder++;
         }
 
         prepareRound();
 
-        for(const [key, player] of Object.entries(players)) {
-            let color= "black"
-            switch (player.role) {
-                case ROLE_TURNCOAT:
-                    color = "black";
-                    break;
-                case ROLE_DEVIL:
-                    color = "red";
-                    break;
-                case ROLE_ANGEL:
-                    color = "green";
-                    break;
-                case ROLE_SAINT_PETER:
-                    color = "blue";
-                    break;
-            }
-            playerList.append("<div class='col-md-4' style='color: " + color + "'>" + player.name + "</div>");
-            console.log("KEY = " + key);
-        }
         console.log(players);
-
+        updatePlayerList();
     } catch(exception) {
         sendError(exception.message);
     }
@@ -138,4 +116,45 @@ function getRoles(playerNumber) {
         case 12:
             return [ROLE_ANGEL, ROLE_ANGEL, ROLE_ANGEL, ROLE_ANGEL, ROLE_ANGEL, ROLE_DEVIL, ROLE_DEVIL, ROLE_DEVIL, ROLE_DEVIL, ROLE_TURNCOAT, ROLE_TURNCOAT, ROLE_TURNCOAT];
     }
+}
+
+function updatePlayerList(withColor = false) {
+    let playerArray = getSortedPlayerArray();
+
+    let playerList = $('#playerList');
+    playerList.html("");
+    playerList.show();
+    playerList.append("<div class='list-group-item list-group-item-action active'> players (" + playerArray.length + ")</div>");
+    for(const [key, player] of playerArray) {
+        let color= "black"
+        if(withColor) {
+            switch (player.role) {
+                case ROLE_TURNCOAT:
+                    color = "black";
+                    break;
+                case ROLE_DEVIL:
+                    color = "red";
+                    break;
+                case ROLE_ANGEL:
+                    color = "green";
+                    break;
+                case ROLE_SAINT_PETER:
+                    color = "blue";
+                    break;
+            }
+        }
+        playerList.append("<div class='list-group-item list-group-item-action' style='color: " + color + "'>" + player.name + " : " + player.score + "</div>");
+        console.log("KEY = " + key);
+    }
+}
+
+function getSortedPlayerArray() {
+    let playerArray = Object.entries(players);
+
+    playerArray.sort(function(a, b) {
+        console.log(a[1].score + " - " + b[1].score + " = " + (a[1].score - b[1].score));
+        return  b[1].score - a[1].score;
+    })
+
+    return playerArray;
 }
