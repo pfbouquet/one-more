@@ -48,4 +48,11 @@ function startGameEvent() {
     sendGameEvent("start-game", {players: players})
 }
 
+function showKeyword() {
+    let keyword = $("#inputKeyword").val();
+    sendGameEvent("newKeyword", {keyword: keyword})
+}
+
 $('#startGame').on("click", startGameEvent);
+
+$('#showKeyword').on('click', showKeyword);

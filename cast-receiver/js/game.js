@@ -32,6 +32,9 @@ function handleGameEvent(data) {
             console.log("Launching game event " + data.eventName);
             startGame(data.players);
             break;
+        case "newKeyword":
+            console.log("Launching game event " + data.eventName);
+            displayKeyword(data.keyword);
         default:
             console.log("Launching game event " + data.eventName);
             break;
