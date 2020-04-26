@@ -18,6 +18,7 @@ let roundNumber;
  */
 
 function sendGameEvent(eventName, infos) {
+    console.log('Sending event '+eventName)
     infos.eventName = eventName;
     sendDataToSenders("game", infos)
 }
@@ -108,7 +109,7 @@ function prepareRound() {
     console.log(players);
 
     sendGameEvent("round-info", {players: players});
-
+    keywordNew();
 }
 
 function getRoles(playerNumber) {
@@ -181,13 +182,13 @@ function getSortedPlayerArray() {
 function keywordCorrect() {
     let keyword = $("#inputKeyword").val();
     $("#keywordCorrect").prepend("<p>"+keyword+"</p>");
-    keywordNew()
+    keywordNew();
 }
 
 function keywordWrong() {
     let keyword = $("#inputKeyword").val();
     $("#keywordWrong").prepend("<p>"+keyword+"</p>");
-    keywordNew()
+    keywordNew();
 }
 
 function keywordNew() {

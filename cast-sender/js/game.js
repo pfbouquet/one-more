@@ -21,7 +21,8 @@ function handleGameEvent(data) {
             break;
         case "newKeyword":
             console.log("Launching game event " + data.eventName);
-
+            showKeyword(data.keyword);
+            break;
         default:
             console.log("Launching game event " + data.eventName);
             break;
@@ -29,6 +30,7 @@ function handleGameEvent(data) {
 }
 
 function sendGameEvent(eventName, infos) {
+    console.log('Sending event '+eventName);
     infos.eventName = eventName;
     sendData("game", infos)
 }
