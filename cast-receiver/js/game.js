@@ -207,14 +207,14 @@ function getSortedPlayerArray() {
  * word management
  */
 function keywordCorrect() {
-    let keyword = $("#inputKeyword").val();
-    $("#keywordCorrect").prepend("<p>"+keyword+"</p>");
+    let keyword = $("#inputKeyword").html();
+    $("#keywordCorrect").append("<p>"+keyword+"</p>");
     keywordNew();
 }
 
 function keywordWrong() {
-    let keyword = $("#inputKeyword").val();
-    $("#keywordWrong").prepend("<p>"+keyword+"</p>");
+    let keyword = $("#inputKeyword").html();
+    $("#keywordWrong").append("<p>"+keyword+"</p>");
     keywordNew();
 }
 
@@ -241,7 +241,7 @@ function keywordGif(keyword) {
         .then(res => {
             gif_url = res.data[0].images.fixed_height.url;
             console.log('Gif for '+keyword+': '+ gif_url);
-            $("#keyword").prepend('</br>' + "<img src=\"" + gif_url + "\"/>");
+            $("#keyword").append('</br>' + "<img src=\"" + gif_url + "\"/>");
         })
         .catch(error => {
             console.log(error)
