@@ -5,17 +5,18 @@ const ROLE_DEVIL = "Devil";
 const ROLE_TURNCOAT = "Turncoat";
 const ROLE_SAINT_THOMAS = "Saint_Thomas";
 
-let keywordArray = ['tracteur', 'crayon', 'chat', 'chien', 'vache', 'corona', 'scientifique'];
-let keywordArrayCursor = 0;
-shuffle(keywordArray);
+let dictionary = ['tracteur', 'crayon', 'chat', 'chien', 'vache', 'corona', 'scientifique'];
+let dictionaryCursor = 0;
+shuffle(dictionary);
 
 const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
 
 let players;
 let roundNumber;
 let keyword;
-let correctKeywords = [];
-let wrongKeywords = [];
+let keywordId = 0;
+let keywords = [];
+
 
 /**
  *
@@ -24,7 +25,6 @@ let wrongKeywords = [];
  */
 
 function sendGameEvent(eventName, infos) {
-    console.log('Sending event '+eventName)
     infos.eventName = eventName;
     sendDataToSenders("game", infos)
 }
@@ -34,16 +34,15 @@ function sendGameEvent(eventName, infos) {
  * @param data
  */
 function handleGameEvent(data) {
+    console.log("Launching game event " + data.eventName);
     switch (data.eventName) {
         case undefined:
             console.log("Game events need an eventName");
             break;
         case "start-game":
-            console.log("Launching game event " + data.eventName);
             startGame(data.players);
             break;
         case "saint-thomas-bind" :
-            console.log("Launching game event " + data.eventName);
             displayLaunchGame();
             break;
         case "start-round":
@@ -51,15 +50,19 @@ function handleGameEvent(data) {
             startRound();
             break;
         case "correct":
-            console.log("Launching game event " + data.eventName);
             keywordCorrect();
             break;
         case "wrong":
-            console.log("Launching game event " + data.eventName);
             keywordWrong();
             break;
+        case "remembered":
+            keywordRemembered(parseInt(data.rememberedKeywordId, 10), data.remembered);
+            break;
+        // To delete
+        case "timeIsOver":
+            timeIsOver();
+            break;
         default:
-            console.log("Launching game event " + data.eventName);
             break;
     }
 }
@@ -201,7 +204,7 @@ function getSortedPlayerArray() {
     playerArray.sort(function(a, b) {
         console.log(a[1].score + " - " + b[1].score + " = " + (a[1].score - b[1].score));
         return  b[1].score - a[1].score;
-    })
+    });
 
     return playerArray;
 }
@@ -209,9 +212,6 @@ function getSortedPlayerArray() {
 function displayRound() {
     // Hide instruction
     $("#game-instruction").hide();
-
-    wrongKeywords = [];
-    correctKeywords = [];
 
     // Clean
     $("#keywordCorrect").html("");
@@ -229,36 +229,64 @@ function startRound() {
 }
 
 /**
- * word management
+ * keyword management
  */
 function keywordCorrect() {
-    $("#keywordCorrect").append("<p>"+keyword+"</p>");
-    correctKeywords.push(keyword);
+    $("#keywordCorrect").append("<p id='"+keywordId+"' class='keyword correctKeyword'>"+keyword+"</p>");
+    keywords.push({keywordId: keywordId, keyword: keyword, found: true, remembered: false});
     keywordNew();
 }
 
 function keywordWrong() {
-    $("#keywordWrong").append("<p>"+keyword+"</p>");
-    wrongKeywords.push(keyword);
+    $("#keywordWrong").append("<p id='"+keywordId+"' class='keyword wrongKeyword'>"+keyword+"</p>");
+    keywords.push({keywordId: keywordId, keyword: keyword, found: false, remembered: false});
     keywordNew();
 }
 
 function keywordNew() {
-    if (keywordArrayCursor >= keywordArray.length) {
-        keywordArrayCursor = 0;
-        shuffle(keywordArray);
+    keywordId ++;
+    if (dictionaryCursor >= dictionary.length) {
+        dictionaryCursor = 0;
+        shuffle(dictionary);
     }
-    keyword = keywordArray[keywordArrayCursor];
+    keyword = dictionary[dictionaryCursor];
     // replace HTTML
-    $("#keyword").html("<p id='inputKeyword'>"+keyword+"</p>");
+    $("#keyword").html("<p id='"+keywordId+"' class='keyword'>"+keyword+"</p>");
     keywordGif(keyword);
-    sendGameEvent("newKeyword", {keyword: keyword});
-    keywordArrayCursor++
+    sendGameEvent("newKeyword", {keyword: keyword, keywordId: keywordId});
+    dictionaryCursor++
+}
+
+function keywordRemembered(rememberedKeywordId, remembered) {
+    let found = false;
+    console.log(rememberedKeywordId);
+    // Update keywords
+    for (let i = 0; i < keywords.length; i++) {
+        if (rememberedKeywordId === keywords[i].keywordId) {
+            keywords[i].remembered = remembered;
+            found = true
+        }
+    }
+    if (found) {
+        // Dsiplay
+        let elmtRememberedKeyword = $(".keyword#" + rememberedKeywordId);
+        if (remembered) {
+            elmtRememberedKeyword.addClass('remembered')
+        } else {
+            elmtRememberedKeyword.removeClass('remembered')
+        }
+    }
+    else {
+        // Throw error
+        throw new Error(rememberedKeywordId+" not found in keywords list.");
+    }
 }
 
 function keywordGif(keyword) {
+
+    let offset = getRandomInt(10);
     // get and display image
-    fetch('https://api.giphy.com/v1/gifs/search?api_key=' + GIPHY_API_KEY + '&q=' + keyword + '&limit=1&offset=0&rating=G&lang=fr')
+    fetch('https://api.giphy.com/v1/gifs/search?api_key='+GIPHY_API_KEY+'&q='+keyword+'&limit=1&offset='+offset+'&rating=G&lang=fr')
         .then(data => {
             return data.json()
         })
@@ -270,4 +298,21 @@ function keywordGif(keyword) {
         .catch(error => {
             console.log(error)
         })
+}
+
+function launchTimer() {
+    $('#past-time').animate({
+        width: '100%'
+    }, {
+        duration: 30*1000,
+        easing: 'linear',
+        complete: timeIsOver()
+    })
+}
+
+function timeIsOver() {
+    console.log("Time is over !");
+    $('#keyword').hide();
+    $('#remember').show();
+    sendGameEvent('timeIsOver', {keywords: keywords})
 }

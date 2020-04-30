@@ -25,3 +25,10 @@ google-cast-launcher {
     --connected-color: white;
     
     }
+
+.correctKeyword {border: 1px solid #223}
+
+.correctKeyword.remembered {
+    font-weight: bold;
+    color: green;
+}

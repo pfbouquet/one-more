@@ -5,7 +5,7 @@ const context = cast.framework.CastReceiverContext.getInstance();
 context.setLoggerLevel(cast.framework.LoggerLevel.DEBUG);
 
 context.addCustomMessageListener(NAMESPACE, function (customEvent) {
-    console.log(JSON.stringify(customEvent.data));
+    console.log('Received :' + JSON.stringify(customEvent.data));
     switch (customEvent.data.eventType) {
         case "text_message":
             handleTextMessage(customEvent.data.eventData);
@@ -36,7 +36,6 @@ context.addEventListener(cast.framework.system.EventType.READY, function (event)
 context.start();
 
 function handleTextMessage(data) {
-    console.log("reveived " + JSON.stringify(data));
     if (data.text != null) {
         $("#content").prepend('</br>' + data.text);
         sendTextMessage("Message reçu : " + data.text);
@@ -60,7 +59,9 @@ function onSuccess(message) {
 }
 
 function sendDataToSenders(eventType, eventData) {
-    context.sendCustomMessage(NAMESPACE, undefined, { eventType: eventType, eventData: eventData });
+    let data = { eventType: eventType, eventData: eventData };
+    console.log('Sending : '+JSON.stringify(data));
+    context.sendCustomMessage(NAMESPACE, undefined, data);
 }
 
 function sendTextMessage(message) {
@@ -80,4 +81,8 @@ function shuffle(array) {
         let j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
 }
