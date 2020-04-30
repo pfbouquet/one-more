@@ -3,13 +3,12 @@
 
 <head>
     <title>One more</title>
-    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/main.css">
 </head>
 
 <body>
 <div class="container" id="app">
-    <h1 class="text-center">One More...</h1>
     <div class="row text-center">
         <div id="game" class="col-md-10">
             <div id="game-instruction">
@@ -18,18 +17,14 @@
             <div id="main-round" class="row" style="display: none">
                 <div id="keywordWrong" class="col-md-2"></div>
                 <div id="keyword" class="col-md-6"></div>
+                <div id="roundScore" class="col-md-6" style="display: none"></div>
                 <div id="keywordCorrect" class="col-md-2"></div>
             </div>
         </div>
         <div id="game-infos" class="col-md-2 list-group">
             <div id="round-info"></div>
-            <div id="playerList" class="list-group">
-                <div class='list-group-item list-group-item-action active'>Players (0)</div>
-                <div class='list-group-item list-group-item-action'></div>
-            </div>
+            <div id="leaderBoard"></div>
         </div>
-
-
     </div>
 </div>
 </body>

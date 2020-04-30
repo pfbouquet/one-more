@@ -1,8 +1,10 @@
 'use strict';
 const NAMESPACE = "urn:x-cast:com.onemore";
 const context = cast.framework.CastReceiverContext.getInstance();
+const options = new cast.framework.CastReceiverOptions();
 
 context.setLoggerLevel(cast.framework.LoggerLevel.DEBUG);
+options.disableIdleTimeout = true;
 
 context.addCustomMessageListener(NAMESPACE, function (customEvent) {
     console.log(JSON.stringify(customEvent.data));
@@ -33,7 +35,7 @@ context.addEventListener(cast.framework.system.EventType.READY, function (event)
     context.setApplicationState('one more is ready...');
 });
 
-context.start();
+context.start(options);
 
 function handleTextMessage(data) {
     console.log("reveived " + JSON.stringify(data));
