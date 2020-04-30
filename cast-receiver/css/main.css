@@ -2,3 +2,7 @@ html, body {
     height: 100%;
     background-image: linear-gradient(-30deg, #a00303, #01aee2);
 }
+.keyword.remembered {
+    font-weight: bold;
+    color: green;
+}

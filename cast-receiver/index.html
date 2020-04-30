@@ -17,8 +17,15 @@
             <div id="main-round" class="row" style="display: none">
                 <div id="keywordWrong" class="col-md-2"></div>
                 <div id="keyword" class="col-md-6"></div>
-                <div id="roundScore" class="col-md-6" style="display: none"></div>
+                <div id="remember" class="col-md-6" style="display: none">
+                    St.Thomas, What do you remember from heaven ?
+                </div>
                 <div id="keywordCorrect" class="col-md-2"></div>
+                <div id="progress-time" class="progress fixed-bottom" style="margin:1%; height: 5%;">
+                    <div id="past-time" class="bar progress-bar-striped bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                    <div id="countdown" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);">countdown</div>
+                </div>
             </div>
         </div>
         <div id="game-infos" class="col-md-2 list-group">
@@ -32,9 +39,11 @@
 <!-- Post load all the goods used to interact with sender. -->
 <script type="text/javascript"
         src="https://www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+<!--<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>-->
+<script type="text/javascript"
+        src="https://code.jquery.com/jquery-3.1.0.js"></script>
 <!-- POPPER - require by bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"

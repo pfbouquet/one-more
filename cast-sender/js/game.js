@@ -4,6 +4,7 @@ const ROLE_TURNCOAT = "Turncoat";
 const ROLE_SAINT_THOMAS = "Saint Thomas";
 
 let players = {};
+let keywords = [];
 
 function initializeGame() {
     console.log("initializeGame");
@@ -17,7 +18,6 @@ function leaveGame() {
 }
 
 function handleGameEvent(data) {
-    console.log("Received game event:" + data.eventName);
     switch (data.eventName) {
         case undefined:
             console.log("Game events need an eventName");
@@ -30,13 +30,15 @@ function handleGameEvent(data) {
         case "round-info":
             handleRoundInfo(data);
             break;
+        case "timeIsOver":
+            roundTimeIsOver(data.keywords);
+            break;
         default:
             break;
     }
 }
 
 function sendGameEvent(eventName, infos) {
-    console.log('Sending event '+eventName);
     infos.eventName = eventName;
     sendData("game", infos)
 }
@@ -60,7 +62,7 @@ function startGameEvent() {
 }
 
 function showKeyword(keyword) {
-    $("#inputKeyword").html(keyword);
+    $("#keyword").html(keyword);
 }
 
 function sendCorrect() {
@@ -82,14 +84,71 @@ function handleRoundInfo(data) {
     $("#stThomasReadyBtn").on("click", function () {
         sendGameEvent("saint-thomas-bind", {});
         $("#stThomasReady").hide();
-        $("#startRound").show()
-        // Start round click;
-        $("#startRoundBtn").on("click", function () {
-            $("#startRound").hide();
-            console.log("Start Round");
-            sendGameEvent("start-round", {});
+        $("#startRound").show();
+    });
+    // Start round click;
+    $("#startRoundBtn").on("click", function () {
+        $("#startRound").hide();
+        sendGameEvent("start-round", {});
+        $("#roundKeyword").show();
+        $('#correct').on('click', sendCorrect);
+        $('#wrong').on('click', sendWrong);
+
+        // To delete
+        $('#timeIsOver').on('click', function() {
+            console.log('Time is over clicked');
+            sendGameEvent("timeIsOver", {})
         });
-    })
+
+    });
+}
+
+function roundTimeIsOver(k) {
+    keywords = k;
+    let elmtCorrectKeywords = $("#correctKeywords");
+
+    // Clean
+    $("#roundKeyword").hide();
+    elmtCorrectKeywords.html("");
+
+    // Display
+    let nbCorrectKeywords=0;
+    for (let i = 0; i < keywords.length; i++) {
+        if (keywords[i].found) {
+            nbCorrectKeywords++;
+            elmtCorrectKeywords.append("<div id='"+keywords[i].keywordId+"' class='keyword correctKeyword' onclick=rememberedKeywordUpdate(this)>"+keywords[i].keyword+"</div>");
+        }
+    }
+    $("#nbCorrectKeywords").html(nbCorrectKeywords);
+    $("#nbRememberedKeywords").html(0);
+    $("#roundRemember").show();
+
+    // Add click sensor to trip end of round
+    $('#validateRemember').on("click", roundIsOver);
+}
+
+function rememberedKeywordUpdate(correctKeyword) {
+    let elmtNbRememberedKeywords = $("#nbRememberedKeywords");
+    let nbRememberedKeywords = parseInt(elmtNbRememberedKeywords.html(), 10);
+
+    if ($(correctKeyword).hasClass('remembered')) {
+        sendGameEvent("remembered", {rememberedKeywordId: $(correctKeyword).attr('id'), remembered: false});
+        $(correctKeyword).removeClass('remembered');
+        elmtNbRememberedKeywords.html(nbRememberedKeywords-1);
+    }
+    else {
+        sendGameEvent("remembered", {rememberedKeywordId: $(correctKeyword).attr('id'), remembered: true});
+        $(correctKeyword).addClass('remembered');
+        elmtNbRememberedKeywords.html(nbRememberedKeywords+1);
+    }
+}
+
+function roundIsOver() {
+    sendGameEvent("roundIsOver", {});
+
+    $("#roundRemember").hide();
+    $("#endOfRound").show();
+
 }
 
 function getSaintThomas() {
@@ -100,11 +159,4 @@ function getSaintThomas() {
     }
 }
 
-
 $('#startGame').on("click", startGameEvent);
-
-$('#showKeyword').on('click', showKeyword);
-
-$('#correct').on('click', sendCorrect);
-
-$('#wrong').on('click', sendWrong);

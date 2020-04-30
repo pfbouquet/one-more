@@ -24,11 +24,11 @@
 			<div id="playerForm" style="display: none">
 				PLAYER FORM IS HERE<br>
 				<div id="playerFormData">
-					<input type="text" id="player1"><br>
-					<input type="text" id="player2"><br>
-					<input type="text" id="player3"><br>
-					<input type="text" id="player4"><br>
-					<input type="text" id="player5"><br>
+					<input type="text" id="player1" value="Anne"><br>
+					<input type="text" id="player2" value="Const"><br>
+					<input type="text" id="player3" value="Greg"><br>
+					<input type="text" id="player4" value="Marine"><br>
+					<input type="text" id="player5" value="PF"><br>
 					<input type="text" id="player6"><br>
 					<input type="text" id="player7"><br>
 				</div>
@@ -42,10 +42,24 @@
 				<div id="startRoundMsg">Look at your role on the screen. When ready, click on the button</div>
 				<button id="startRoundBtn">Start !</button>
 			</div>
-			<div id="keyword">
-				<p id="inputKeyword">keyword</p>
+			<div id="roundKeyword" style="display: none">
+				<p id="keyword"></p>
 				<div id="wrong" style="width:500px;height:100px;border:1px solid #000;background-color: crimson;">WRONG</div>
 				<div id="correct" style="width:500px;height:100px;border:1px solid #000;background-color: green;">CORRECT</div>
+				<!-- TO DELETE -->
+				<button id="timeIsOver">Time is over !</button>
+			</div>
+			<div id="roundRemember" style="display: none">
+				St Thomas remembers about:<br>
+				<div id="correctKeywords">
+					<!-- Correct keywords will be inserted here -->
+				</div>
+				<button id="validateRemember">Validate <span id="nbRememberedKeywords">x</span>/<span id="nbCorrectKeywords">n</span></button>
+			</div>
+			<div id="endOfRound" style="display: none">
+				One more ?<br>
+				<button id="nextRound">Launch next round</button><br>
+				<button id="endGame">End game</button>
 			</div>
 		</div>
 

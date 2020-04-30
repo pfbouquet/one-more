@@ -3,11 +3,11 @@
  */
 
 // Prod
-const applicationID = '90E7072E';
+//const applicationID = '90E7072E';
 // Constant
 //const applicationID = '41EF74CE';
 // PF
-//const applicationID = '220A8BDE';
+const applicationID = '220A8BDE';
 
 
 const NAMESPACE = 'urn:x-cast:com.onemore';
@@ -62,7 +62,7 @@ function initializeSession() {
         console.log("Add new message listener to " + castSession.getSessionId());
         castSession.addMessageListener(NAMESPACE, function (namespace, message) {
             let data = JSON.parse(message);
-            console.log("received event: "+JSON.stringify(data));
+            console.log("Received : "+JSON.stringify(data));
             switch (data.eventType) {
                 case "text_message":
                     handleTextMessage(data.eventData);
@@ -93,7 +93,9 @@ function onSuccess(message) {
 function sendData(eventType, eventData) {
     let castSession = cast.framework.CastContext.getInstance().getCurrentSession();
     if (castSession) {
-        castSession.sendMessage(NAMESPACE, { eventType: eventType, eventData: eventData }).then(function (e) {
+        let data = { eventType: eventType, eventData: eventData };
+        console.log('Sending : '+JSON.stringify(data));
+        castSession.sendMessage(NAMESPACE, data).then(function (e) {
             onSuccess(e);
         }).catch(function (e) {
             onError(e);
@@ -122,7 +124,6 @@ function initAlert(message, title, type = "danger") {
 
 
 function handleTextMessage(data) {
-    console.log("reveived " + JSON.stringify(data));
     if (data.text != null) {
         initAlert(data.text, "Retour: ", "success");
     }
