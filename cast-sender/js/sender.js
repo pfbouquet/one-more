@@ -5,9 +5,9 @@
 // Prod
 //const applicationID = '90E7072E';
 // Constant
-//const applicationID = '41EF74CE';
+const applicationID = '41EF74CE';
 // PF
-const applicationID = '220A8BDE';
+//const applicationID = '220A8BDE';
 
 
 const NAMESPACE = 'urn:x-cast:com.onemore';

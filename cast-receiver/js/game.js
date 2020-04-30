@@ -17,6 +17,7 @@ let keyword;
 let keywordId = 0;
 let keywords = [];
 
+let angelScore, devilScore, turncoatScore, saintThomasScore;
 
 /**
  *
@@ -57,6 +58,11 @@ function handleGameEvent(data) {
             break;
         case "remembered":
             keywordRemembered(parseInt(data.rememberedKeywordId, 10), data.remembered);
+            break;
+        case "roundIsOver":
+            calculateScore();
+            updatePlayerList(true);
+            displayRoundScore();
             break;
         // To delete
         case "timeIsOver":
@@ -164,6 +170,7 @@ function displayRoundScore() {
     roundScoreDiv.append("</br><h4 class='alert alert-warning'>" + ROLE_TURNCOAT + ": + " + turncoatScore + "</h4>");
     roundScoreDiv.append("</br><h4 class='alert alert-info'>" + ROLE_SAINT_THOMAS + ": + " + saintThomasScore + "</h4>");
     $("#keyword").hide();
+    $("#remember").hide();
     roundScoreDiv.show();
 }
 
@@ -320,13 +327,26 @@ function keywordGif(keyword) {
 function calculateScore() {
     for (const [key, player] of Object.entries(players)) {
         console.log("calculate score");
-        let correct = correctKeywords.length;
-        let wrong = wrongKeywords.length;
+        let correct = 0;
+        let wrong = 0;
+        let remembered = 0;
+
+        for (let i = 0; i < keywords.length; i++) {
+            if(keywords[i].found) {
+                correct++;
+                if(keywords[i].remembered) {
+                    remembered++;
+                }
+            }
+            else {
+                wrong++;
+            }
+        }
 
         devilScore = wrong;
         angelScore = correct
         saintThomasScore = correct;
-        if (correct === rememberedKeywords) {
+        if (correct === remembered) {
             saintThomasScore += 2;
         }
 
