@@ -1,15 +1,15 @@
 const MINIMUM_PLAYER = 4;
+const ROUND_DURATION = 10*1000;
 
 const ROLE_ANGEL = "Angel";
 const ROLE_DEVIL = "Devil";
 const ROLE_TURNCOAT = "Turncoat";
 const ROLE_SAINT_THOMAS = "Saint Thomas";
 
-let dictionary = ['tracteur', 'crayon', 'chat', 'chien', 'vache', 'corona', 'scientifique'];
-let dictionaryCursor = 0;
-shuffle(dictionary);
-
 const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
+
+let dictionary;
+let dictionaryCursor = 0;
 
 let players;
 let roundNumber;
@@ -18,6 +18,8 @@ let keywordId = 0;
 let keywords = [];
 
 let angelScore, devilScore, turncoatScore, saintThomasScore;
+
+let progressInterval, progressTimer, progressWidth;
 
 /**
  *
@@ -28,6 +30,14 @@ let angelScore, devilScore, turncoatScore, saintThomasScore;
 function sendGameEvent(eventName, infos) {
     infos.eventName = eventName;
     sendDataToSenders("game", infos)
+}
+
+function loadDictionary(mode) {
+    fetch('data/dictionary/'+mode+'.txt') // fetch text file
+        .then((resp) => resp.text())
+        .then(data => {
+            dictionary = shuffle(data.split(/\r?\n/));
+        });
 }
 
 /**
@@ -78,14 +88,17 @@ function handleGameEvent(data) {
  * @param __players
  */
 function startGame(__players) {
+    // Load dictionary
+    loadDictionary('debug');
+    // Load players and init round 1
     try {
         players = __players;
         if (Array.isArray(players)) {
             throw new Error("player list is not correct.");
         }
 
-        if (Object.keys(players).length < 4) {
-            throw new Error("Must have 4 players or more.");
+        if (Object.keys(players).length < MINIMUM_PLAYER) {
+            throw new Error("Must have "+MINIMUM_PLAYER+" players or more.");
         }
 
         roundNumber = 1;
@@ -246,8 +259,8 @@ function displayRound() {
 }
 
 function startRound() {
-    // TODO: init timer
-
+    // init timer
+    progressInit();
     // 1st word
     keywordNew();
 }
@@ -344,7 +357,7 @@ function calculateScore() {
         }
 
         devilScore = wrong;
-        angelScore = correct
+        angelScore = correct;
         saintThomasScore = correct;
         if (correct === remembered) {
             saintThomasScore += 2;
@@ -387,19 +400,46 @@ function calculateScore() {
     }
 }
 
-function launchTimer() {
-    $('#past-time').animate({
-        width: '100%'
-    }, {
-        duration: 30*1000,
-        easing: 'linear',
-        complete: timeIsOver()
-    })
-}
+/**
+ * Round time management
+ */
 
 function timeIsOver() {
     console.log("Time is over !");
+    $('#progress').hide();
     $('#keyword').hide();
     $('#remember').show();
     sendGameEvent('timeIsOver', {keywords: keywords})
+}
+
+function progressInit() {
+    progressTimer = 0;
+    progressWidth = 0;
+    $('#progress').show();
+    progressMove();
+}
+
+function progressMove() {
+    let elemBar = document.getElementById("progressBar");
+    let elemCount = document.getElementById("progressCountdown");
+    let step = 10;
+
+    clearInterval(progressInterval);
+    progressInterval = setInterval(frame, step);
+
+    function frame() {
+        if (progressTimer >= ROUND_DURATION) {
+            clearInterval(progressInterval);
+            timeIsOver();
+        } else {
+            progressTimer = progressTimer + step;
+            progressWidth = 100 * progressTimer/ROUND_DURATION;
+            elemBar.style.width = progressWidth + '%';
+            elemCount.innerHTML = parseInt((ROUND_DURATION - progressTimer)/1000, 10) + 's';
+        }
+    }
+}
+
+function progressPause() {
+    clearInterval(progressInterval);
 }

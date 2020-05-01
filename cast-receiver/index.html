@@ -11,30 +11,32 @@
 <div class="container" id="app">
     <div class="row text-center">
         <div id="game" class="col-md-10">
+
             <div id="game-instruction">
                 Start the game
             </div>
+
             <div id="main-round" class="row" style="display: none">
                 <div id="keywordWrong" class="col-md-2"></div>
                 <div id="keyword" class="col-md-6"></div>
-                <div id="remember" class="col-md-6" style="display: none">
-                    St.Thomas, What do you remember from heaven ?
-                </div>
+                <div id="remember" class="col-md-6" style="display: none">St.Thomas, What do you remember from heaven ?</div>
                 <div id="roundScore" class="col-md-6" style="display: none"></div>
-
                 <div id="keywordCorrect" class="col-md-2"></div>
-                <div id="progress-time" class="progress fixed-bottom" style="margin:1%; height: 5%;">
-                    <div id="past-time" class="bar progress-bar-striped bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                    </div>
-                    <div id="countdown" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);">countdown</div>
-                </div>
+
             </div>
+
         </div>
         <div id="game-infos" class="col-md-2 list-group">
             <div id="round-info"></div>
             <div id="leaderBoard"></div>
         </div>
     </div>
+
+    <div id="progress" class="progress fixed-bottom" style="margin:1%; height: 5%; display: none">
+        <div id="progressBar" class="bar bg-danger"></div>
+        <div id="progressCountdown" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);"></div>
+    </div>
+
 </div>
 </body>
 
