@@ -11,8 +11,8 @@ const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
 let dictionary = [];
 let dictionaryCursor = 0;
 
-let players;
-let roundNumber;
+let players = [];
+let roundNumber = 1;
 let keyword;
 let keywordId = 0;
 let keywords = [];
@@ -81,9 +81,25 @@ function handleGameEvent(data) {
             updatePlayerList(true);
             displayRoundScore();
             break;
-        // To delete
-        case "timeIsOver":
-            timeIsOver();
+        case "endGame":
+            // Hide game
+            $("#game-infos").hide();
+            $("#main-round").hide();
+            $("#progress").hide();
+
+            // Re-init variables and html content
+            devilScore = 0;
+            angelScore = 0;
+            turncoatScore = 0;
+            saintThomasScore = 0;
+            players = [];
+            roundNumber = 1;
+
+            // Show home
+            $("#game").show();
+            $("#game-instruction").html("Enter players names <br>Then hit Start!")
+            $("#game-instruction").show();
+
             break;
         default:
             break;
@@ -127,6 +143,17 @@ function startGame(__players) {
  *
  */
 function prepareRound() {
+    // clear previous
+    $("#remember").hide();
+    $("#roundScore").hide();
+    keyword = "";
+    keywordId = 0;
+    keywords = [];
+
+    $("#keywordWrong").show();
+    $("#keywordCorrect").show();
+    $("#keyword").show();
+
     updateRoundNumber();
 
     // Get an array of player key
@@ -143,6 +170,7 @@ function prepareRound() {
         }
     }
     updatePlayerList(false);
+    $("#game-infos").show();
 
     displayGetReadyMessage();
     sendGameEvent("round-info", {players: players});
@@ -209,7 +237,7 @@ function updatePlayerList(showPlayerRole = false) {
     leaderBoard.html("");
     leaderBoard.append("<h4>Leaderboard (" + playerArray.length + ")</h4>");
     for (const [key, player] of playerArray) {
-        let contextualClass = ""
+        let contextualClass = "";
         let name = player.name;
         if(showPlayerRole) {
             switch (player.role) {

@@ -21,8 +21,8 @@ function initializeGame() {
 }
 
 function endGame() {
-    console.log("endGame");
-    $("#game").hide();
+    sendGameEvent("endGame", {});
+    initializeGame()
 }
 
 function handleGameEvent(data) {
@@ -33,7 +33,7 @@ function handleGameEvent(data) {
         case "Start":
             break;
         case "newKeyword":
-            showKeyword(data.keyword);
+            $("#keyword").html(data.keyword);
             break;
         case "round-info":
             handleRoundInfo(data);
@@ -51,7 +51,7 @@ function sendGameEvent(eventName, infos) {
     sendData("game", infos)
 }
 
-function startGameEvent() {
+function startGame() {
     players = {};
     for (let step = 1; step <= 7; step++) {
         // Runs 5 times, with values of step 0 through 4.
@@ -64,18 +64,6 @@ function startGameEvent() {
     sendGameEvent("start-game", {players: players})
 }
 
-function showKeyword(keyword) {
-    $("#keyword").html(keyword);
-}
-
-function sendCorrect() {
-    sendGameEvent("correct", {})
-}
-
-function sendWrong() {
-    sendGameEvent("wrong", {})
-}
-
 function handleRoundInfo(data) {
     players = data.players;
     console.log(players);
@@ -83,34 +71,6 @@ function handleRoundInfo(data) {
     $("#playerForm").hide();
     $("#stThomasReady").show();
     $("#stThomasReadyMsg").html("<h3>" + saintThomas.name + " is Saint Thomas for this round.</h3><br/><h4>When Saint Thomas is blinded, hit the button ! </h4>");
-    // St thomas ready click
-    $("#stThomasReadyBtn").on("click", function () {
-        sendGameEvent("saint-thomas-bind", {});
-        $("#stThomasReady").hide();
-        $("#startRound").show();
-    });
-    // Start round click;
-    $("#startRoundBtn").on("click", function () {
-        $("#startRound").hide();
-        sendGameEvent("start-round", {});
-        $("#roundKeyword").show();
-        $('#correct').on('click', sendCorrect);
-        $('#wrong').on('click', sendWrong);
-        $('#pause').on("click", function () {
-            sendGameEvent("progressPause", {});
-            $('#correct').hide();
-            $('#wrong').hide();
-            $('#pause').hide();
-            $('#resume').show();
-        });
-        $('#resume').on("click", function () {
-            sendGameEvent("progressResume", {});
-            $('#correct').show();
-            $('#wrong').show();
-            $('#resume').hide();
-            $('#pause').show()
-        });
-    });
 }
 
 function roundTimeIsOver(k) {
@@ -133,8 +93,6 @@ function roundTimeIsOver(k) {
     $("#nbRememberedKeywords").html(0);
     $("#roundRemember").show();
 
-    // Add click sensor to trip end of round
-    $('#validateRemember').on("click", roundIsOver);
 }
 
 function rememberedKeywordUpdate(correctKeyword) {
@@ -155,7 +113,7 @@ function rememberedKeywordUpdate(correctKeyword) {
 
 function roundIsOver() {
     sendGameEvent("roundIsOver", {});
-
+    $("#correctKeywords").html("");
     $("#roundRemember").hide();
     $("#endOfRound").show();
 
@@ -169,4 +127,48 @@ function getSaintThomas() {
     }
 }
 
-$('#startGame').on("click", startGameEvent);
+// GAME EVENTS
+$('#startGame').on("click", startGame);
+$('#endGame').on("click", endGame);
+
+
+// ROUND EVENTS
+// St thomas ready click
+    $("#stThomasReadyBtn").on("click", function () {
+        sendGameEvent("saint-thomas-bind", {});
+        $("#stThomasReady").hide();
+        $("#startRound").show();
+    });
+
+// Start round click;
+$("#startRoundBtn").on("click", function () {
+    $("#startRound").hide();
+    sendGameEvent("start-round", {});
+    $("#roundKeyword").show();
+});
+
+$('#correct').on('click', function() {
+    sendGameEvent("correct", {})
+});
+$('#wrong').on('click', function () {
+    sendGameEvent("wrong", {})
+});
+
+// Timing management
+$('#pause').on("click", function () {
+    sendGameEvent("progressPause", {});
+    $('#correct').hide();
+    $('#wrong').hide();
+    $('#pause').hide();
+    $('#resume').show();
+});
+$('#resume').on("click", function () {
+    sendGameEvent("progressResume", {});
+    $('#correct').show();
+    $('#wrong').show();
+    $('#resume').hide();
+    $('#pause').show()
+});
+
+// Add click sensor to trip end of round
+$('#validateRemember').on("click", roundIsOver);
