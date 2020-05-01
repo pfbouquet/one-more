@@ -25,18 +25,21 @@ function endGame() {
     initializeGame()
 }
 
+function nextRound() {
+    sendGameEvent("nextRound", {});
+    $("#endOfRound").hide();
+}
+
 function handleGameEvent(data) {
     switch (data.eventName) {
         case undefined:
             console.log("Game events need an eventName");
             break;
-        case "Start":
+        case "round-info":
+            handleRoundInfo(data);
             break;
         case "newKeyword":
             $("#keyword").html(data.keyword);
-            break;
-        case "round-info":
-            handleRoundInfo(data);
             break;
         case "timeIsOver":
             roundTimeIsOver(data.keywords);
@@ -127,15 +130,15 @@ function getSaintThomas() {
     }
 }
 
-// GAME EVENTS
+// MACRO GAME EVENTS
 $('#startGame').on("click", startGame);
 $('#endGame').on("click", endGame);
-
+$('#nextRound').on("click", nextRound);
 
 // ROUND EVENTS
 // St thomas ready click
     $("#stThomasReadyBtn").on("click", function () {
-        sendGameEvent("saint-thomas-bind", {});
+        sendGameEvent("saint-thomas-blind", {});
         $("#stThomasReady").hide();
         $("#startRound").show();
     });

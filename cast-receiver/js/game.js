@@ -11,8 +11,8 @@ const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
 let dictionary = [];
 let dictionaryCursor = 0;
 
-let players = [];
-let roundNumber = 1;
+let players;
+let roundNumber;
 let keyword;
 let keywordId = 0;
 let keywords = [];
@@ -53,12 +53,15 @@ function handleGameEvent(data) {
             break;
         case "start-game":
             startGame(data.players);
+            prepareRound();
             break;
-        case "saint-thomas-bind" :
+        case "nextRound":
+            prepareRound();
+            break;
+        case "saint-thomas-blind":
             displayLaunchGame();
             break;
         case "start-round":
-            displayRound();
             startRound();
             break;
         case "correct":
@@ -93,11 +96,10 @@ function handleGameEvent(data) {
             turncoatScore = 0;
             saintThomasScore = 0;
             players = [];
-            roundNumber = 1;
 
             // Show home
             $("#game").show();
-            $("#game-instruction").html("Enter players names <br>Then hit Start!")
+            $("#game-instruction").html("<h1>Welcome</h1><h2>Let's play to Saint Thomas !</h2>")
             $("#game-instruction").show();
 
             break;
@@ -124,7 +126,7 @@ function startGame(__players) {
             throw new Error("Must have "+MINIMUM_PLAYER+" players or more.");
         }
 
-        roundNumber = 1;
+        roundNumber = 0;
 
         let dreamerOrder = 1;
         for (const [key, player] of Object.entries(players)) {
@@ -132,8 +134,6 @@ function startGame(__players) {
             players[key].score = 0;
             dreamerOrder++;
         }
-
-        prepareRound();
     } catch (exception) {
         sendError(exception.message);
     }
@@ -143,20 +143,24 @@ function startGame(__players) {
  *
  */
 function prepareRound() {
-    // clear previous
+    // Clear
     $("#remember").hide();
     $("#roundScore").hide();
+    $("#keywordCorrect").hide();
+    $("#keywordWrong").hide();
+
+    // re-init var and html
+    $("#keywordCorrect").html("");
+    $("#keywordWrong").html("");
     keyword = "";
     keywordId = 0;
     keywords = [];
 
-    $("#keywordWrong").show();
-    $("#keywordCorrect").show();
-    $("#keyword").show();
-
+    // Round counter
+    roundNumber++;
     updateRoundNumber();
 
-    // Get an array of player key
+    // Get player roles
     let roleNumber = 0;
     let roles = getRoles(Object.entries(players).length);
     shuffle(roles);
@@ -202,11 +206,13 @@ function getRoles(playerNumber) {
 function displayGetReadyMessage() {
     let saintThomas = getSaintThomas();
     $("#game-instruction").html("<h2>" + saintThomas.name + " you are Saint Thomas for this round. Go blind ! </h2><br/><h4>When Saint Thomas is blind, hit ready ! </h4>")
+    $("#game-instruction").show();
 }
 
 function displayLaunchGame() {
     updatePlayerList(true);
     $("#game-instruction").html("<h2>Watch your personal role for this round. </h2><br/><h4>When everyone is ready, click on the button the start the round ! </h4>")
+    $("#game-instruction").show();
 }
 
 function displayRoundScore() {
@@ -281,23 +287,20 @@ function getSortedPlayerArray() {
     return playerArray;
 }
 
-function displayRound() {
+function startRound() {
     // Hide instruction
     $("#game-instruction").hide();
 
-    // Clean
-    $("#keywordCorrect").html("");
-    $("#keywordWrong").html("");
-
     // Show main-round
     $("#main-round").show();
-}
+    $("#keywordWrong").show();
+    $("#keywordCorrect").show();
+    $("#keyword").show();
 
-function startRound() {
-    // init timer
-    progressInit();
     // 1st word
     keywordNew();
+    // init timer
+    progressInit();
 }
 
 /**
