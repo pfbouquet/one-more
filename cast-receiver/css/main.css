@@ -1,8 +1,36 @@
 html, body {
     height: 100%;
-    background-image: linear-gradient(-30deg, #a00303, #01aee2);
+    color: white;
+    background: linear-gradient(320deg, #022a55, #3d0011);
+    background-size: 150% 150%;
+
+    -webkit-animation: AnimationName 17s ease infinite;
+    -moz-animation: AnimationName 17s ease infinite;
+    -o-animation: AnimationName 17s ease infinite;
+    animation: AnimationName 17s ease infinite;
 }
 .keyword.remembered {
     font-weight: bold;
     color: green;
+}
+
+@-webkit-keyframes AnimationName {
+    0%{background-position:19% 0%}
+    50%{background-position:82% 100%}
+    100%{background-position:19% 0%}
+}
+@-moz-keyframes AnimationName {
+    0%{background-position:19% 0%}
+    50%{background-position:82% 100%}
+    100%{background-position:19% 0%}
+}
+@-o-keyframes AnimationName {
+    0%{background-position:19% 0%}
+    50%{background-position:82% 100%}
+    100%{background-position:19% 0%}
+}
+@keyframes AnimationName {
+    0%{background-position:19% 0%}
+    50%{background-position:82% 100%}
+    100%{background-position:19% 0%}
 }
