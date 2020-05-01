@@ -8,7 +8,7 @@ const ROLE_SAINT_THOMAS = "Saint Thomas";
 
 const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
 
-let dictionary;
+let dictionary = [];
 let dictionaryCursor = 0;
 
 let players;
@@ -36,8 +36,9 @@ function loadDictionary(mode) {
     fetch('data/dictionary/'+mode+'.txt') // fetch text file
         .then((resp) => resp.text())
         .then(data => {
-            dictionary = shuffle(data.split(/\r?\n/));
-        });
+            dictionary = data.split(/\r?\n/);
+            shuffle(dictionary);
+        })
 }
 
 /**
@@ -65,6 +66,12 @@ function handleGameEvent(data) {
             break;
         case "wrong":
             keywordWrong();
+            break;
+        case "progressPause":
+            progressPause();
+            break;
+        case "progressResume":
+            progressMove();
             break;
         case "remembered":
             keywordRemembered(parseInt(data.rememberedKeywordId, 10), data.remembered);
@@ -422,7 +429,7 @@ function progressInit() {
 function progressMove() {
     let elemBar = document.getElementById("progressBar");
     let elemCount = document.getElementById("progressCountdown");
-    let step = 10;
+    let step = 1000;
 
     clearInterval(progressInterval);
     progressInterval = setInterval(frame, step);
