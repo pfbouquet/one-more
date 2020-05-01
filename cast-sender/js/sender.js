@@ -3,11 +3,11 @@
  */
 
 // Prod
-const applicationID = '90E7072E';
+//const applicationID = '90E7072E';
 // Constant
 //const applicationID = '41EF74CE';
 // PF
-//const applicationID = '220A8BDE';
+const applicationID = '220A8BDE';
 
 
 const NAMESPACE = 'urn:x-cast:com.onemore';
@@ -36,9 +36,11 @@ window['__onGCastApiAvailable'] = function (isAvailable) {
                 case cast.framework.SessionState.SESSION_RESUMED:
                     console.log('CastSession resumed');
                     initializeSession();
+                    initializeGame();
                     break;
                 case cast.framework.SessionState.SESSION_ENDED:
                     console.log('CastSession disconnected');
+                    kill();
                     break;
                 default:
                     console.log(JSON.stringify(event));
@@ -122,7 +124,6 @@ function initAlert(message, title, type = "danger") {
     $('#alert_placeholder').html(html);
 }
 
-
 function handleTextMessage(data) {
     if (data.text != null) {
         initAlert(data.text, "Retour: ", "success");
@@ -130,14 +131,6 @@ function handleTextMessage(data) {
 }
 
 function kill() {
-    leaveGame();
+    endGame();
     stopApp()
 }
-
-//$('#sendMessageBtn').on("click", function () {
-//    let message = $("#textMessageInput").val();
-//    sendTextMessage(message);
-//    // setVolume(0.1);
-//});
-
-$('#kill').on('click', kill);

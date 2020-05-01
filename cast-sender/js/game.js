@@ -8,13 +8,21 @@ let keywords = [];
 
 function initializeGame() {
     console.log("initializeGame");
-    document.getElementById("game").style.display = "inline-block";
-    displayPlayerForm()
+    players = {};
+    keywords = [];
+    $("#stThomasReady").hide();
+    $("#startRound").hide();
+    $("#roundKeyword").hide();
+    $("#roundRemember").hide();
+    $("#endOfRound").hide();
+    // Show
+    $("#game").show();
+    $("#playerForm").show();
 }
 
-function leaveGame() {
-    console.log("leaveGame");
-    document.getElementById("game").style.display = "none";
+function endGame() {
+    console.log("endGame");
+    $("#game").hide();
 }
 
 function handleGameEvent(data) {
@@ -41,11 +49,6 @@ function handleGameEvent(data) {
 function sendGameEvent(eventName, infos) {
     infos.eventName = eventName;
     sendData("game", infos)
-}
-
-function displayPlayerForm() {
-    console.log("displayPlayerForm");
-    document.getElementById("playerForm").style.display = "inline-block";
 }
 
 function startGameEvent() {
@@ -93,13 +96,20 @@ function handleRoundInfo(data) {
         $("#roundKeyword").show();
         $('#correct').on('click', sendCorrect);
         $('#wrong').on('click', sendWrong);
-
-        // To delete
-        $('#timeIsOver').on('click', function() {
-            console.log('Time is over clicked');
-            sendGameEvent("timeIsOver", {})
+        $('#pause').on("click", function () {
+            sendGameEvent("progressPause", {});
+            $('#correct').hide();
+            $('#wrong').hide();
+            $('#pause').hide();
+            $('#resume').show();
         });
-
+        $('#resume').on("click", function () {
+            sendGameEvent("progressResume", {});
+            $('#correct').show();
+            $('#wrong').show();
+            $('#resume').hide();
+            $('#pause').show()
+        });
     });
 }
 
