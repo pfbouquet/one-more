@@ -73,7 +73,7 @@ function handleRoundInfo(data) {
     let saintThomas = getSaintThomas();
     $("#playerForm").hide();
     $("#stThomasReady").show();
-    $("#stThomasReadyMsg").html("<h3>" + saintThomas.name + " is Saint Thomas for this round.</h3><br/><h4>When Saint Thomas is blinded, hit the button ! </h4>");
+    $("#stThomasReadyMsg").html("<h3 class='mt-5'>" + saintThomas.name + " devient Saint-Thomas pour cette manche</h3><br/><h4>Quand il/elle s'est caché·e les yeux, cliquez sur le bouton</h4>");
 }
 
 function roundTimeIsOver(k) {
@@ -89,7 +89,7 @@ function roundTimeIsOver(k) {
     for (let i = 0; i < keywords.length; i++) {
         if (keywords[i].found) {
             nbCorrectKeywords++;
-            elmtCorrectKeywords.append("<div id='"+keywords[i].keywordId+"' class='keyword correctKeyword' onclick=rememberedKeywordUpdate(this)>"+keywords[i].keyword+"</div>");
+            elmtCorrectKeywords.append("<li id='"+keywords[i].keywordId+"' class='list-group-item list-group-item-light keyword' onclick=rememberedKeywordUpdate(this)>"+keywords[i].keyword+"</li>");
         }
     }
     $("#nbCorrectKeywords").html(nbCorrectKeywords);
@@ -102,14 +102,16 @@ function rememberedKeywordUpdate(correctKeyword) {
     let elmtNbRememberedKeywords = $("#nbRememberedKeywords");
     let nbRememberedKeywords = parseInt(elmtNbRememberedKeywords.html(), 10);
 
-    if ($(correctKeyword).hasClass('remembered')) {
+    if ($(correctKeyword).hasClass('list-group-item-success')) {
         sendGameEvent("remembered", {rememberedKeywordId: $(correctKeyword).attr('id'), remembered: false});
-        $(correctKeyword).removeClass('remembered');
+        $(correctKeyword).addClass('list-group-item-light');
+        $(correctKeyword).removeClass('list-group-item-success');
         elmtNbRememberedKeywords.html(nbRememberedKeywords-1);
     }
     else {
         sendGameEvent("remembered", {rememberedKeywordId: $(correctKeyword).attr('id'), remembered: true});
-        $(correctKeyword).addClass('remembered');
+        $(correctKeyword).removeClass('list-group-item-light');
+        $(correctKeyword).addClass('list-group-item-success');
         elmtNbRememberedKeywords.html(nbRememberedKeywords+1);
     }
 }

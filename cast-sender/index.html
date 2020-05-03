@@ -1,85 +1,105 @@
 <html>
 
 <head>
-	<title>Chromecast dashboard</title>
+    <title>Chromecast dashboard</title>
 
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin+Condensed:700">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-		integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-	<link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin+Condensed:700">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 
 <body>
-	<div class="container">
-		<!-- ALERT -->
-		<div id="alert_placeholder"></div>
+<div class="container-fluid h-100">
+    <!-- ALERT -->
+    <div id="alert_placeholder"></div>
 
-		<!-- GOOGLE CAST LAUNCHER -->
-		<google-cast-launcher></google-cast-launcher>
-
-		<!-- MY CONTENT -->
-		<div id="game" style="display: none">
-			GAME IS HERE
-			<div id="playerForm" style="display: none">
-				PLAYER FORM IS HERE<br>
-				<div id="playerFormData">
-					<input type="text" id="player1" value="Anne"><br>
-					<input type="text" id="player2" value="Const"><br>
-					<input type="text" id="player3" value="Greg"><br>
-					<input type="text" id="player4" value="Marine"><br>
-					<input type="text" id="player5" value="PF"><br>
-					<input type="text" id="player6"><br>
-					<input type="text" id="player7"><br>
-				</div>
-				<button id="startGame">Start the game!</button>
-			</div>
-			<div id="stThomasReady" style="display: none">
-				<div id="stThomasReadyMsg"></div>
-				<button id="stThomasReadyBtn">Ready !</button>
-			</div>
-			<div id="startRound" style="display: none">
-				<div id="startRoundMsg">Look at your role on the screen. When ready, click on the button</div>
-				<button id="startRoundBtn">Start !</button>
-			</div>
-			<div id="roundKeyword" style="display: none">
-				<div id="keyword"></div>
-				<div id="wrong" style="width:500px;height:100px;border:1px solid #000;background-color: crimson;">WRONG</div>
-				<div id="correct" style="width:500px;height:100px;border:1px solid #000;background-color: green;">CORRECT</div>
-				<button id="pause">Pause</button>
-				<button id="resume" style="display: none;">Resume</button>
-			</div>
-			<div id="roundRemember" style="display: none">
-				St Thomas remembers about:<br>
-				<div id="correctKeywords">
-					<!-- Correct keywords will be inserted here -->
-				</div>
-				<button id="validateRemember">Validate <span id="nbRememberedKeywords">x</span>/<span id="nbCorrectKeywords">n</span></button>
-			</div>
-			<div id="endOfRound" style="display: none">
-				One more ?<br>
-				<button id="nextRound">Next round</button><br>
-				<button id="endGame">End game</button>
-			</div>
-		</div>
-
-
-	</div>
+    <div class="row">
+        <div id="pre-game" class="col-9">
+            <h1>Saint Thomas</h1>
+        </div>
+        <!-- GOOGLE CAST LAUNCHER -->
+        <google-cast-launcher class="col-2"></google-cast-launcher>
+    </div>
+    <!-- MY CONTENT -->
+    <div id="game" class="text-center w-100" style="display: none">
+        <div id="playerForm" class="w-100" style="display: none">
+            <h2>Joueurs</h2>
+            <div id="playerFormData" class="row ml-3 mr-3">
+                <div class="p-3 col-md-6 col-sm-12"><input type="text" id="player1" class="form-control" value="Anne">
+                </div>
+                <div class="p-3 col-md-6 col-sm-12"><input type="text" id="player2" class="form-control" value="Const">
+                </div>
+                <div class="p-3 col-md-6 col-sm-12"><input type="text" id="player3" class="form-control" value="Greg">
+                </div>
+                <div class="p-3 col-md-6 col-sm-12"><input type="text" id="player4" class="form-control" value="Marine">
+                </div>
+                <div class="p-3 col-md-6 col-sm-12"><input type="text" id="player5" class="form-control" value="PF">
+                </div>
+                <div class="p-3 col-md-6 col-sm-12"><input type="text" id="player7" class="form-control"></div>
+                <div class="p-3 col-md-6 col-sm-12"><input type="text" id="player6" class="form-control"></div>
+            </div>
+            <button id="startGame" class="m-3 btn btn-secondary btn-lg">Commencer la partie</button>
+        </div>
+        <div id="stThomasReady" style="display: none">
+            <div id="stThomasReadyMsg"></div>
+            <button id="stThomasReadyBtn" class="m-3 btn btn-secondary btn-lg">Prêt·e</button>
+        </div>
+        <div id="startRound" style="display: none">
+            <h4 class="mt-3" id="startRoundMsg">Regardez votre rôle sur l'écran</h4>
+            <button id="startRoundBtn" class="m-3 btn btn-secondary btn-lg">GO !</button>
+        </div>
+        <div id="roundKeyword" style="display: none">
+            <h2 class="mt-3" id="keyword"></h2>
+            <div class="row m-5">
+                <div id="wrong" class="col-6 text-danger">
+                    <i class="far fa-times-circle fa-10x"></i>
+                </div>
+                <div id="correct" class="col-6 text-success">
+                    <i class="far fa-check-circle fa-10x"></i>
+                </div>
+            </div>
+            <button id="pause" class="m-3 btn btn-secondary btn-lg">Pause</button>
+            <button id="resume" style="display: none;" class="m-3 btn btn-secondary btn-lg">Reprendre</button>
+        </div>
+        <div id="roundRemember" style="display: none">
+            <h2>Saint Thomas se souvient de...</h2>
+            <ul id="correctKeywords" class="m-5 list-group list-group-flush">
+                <!-- Correct keywords will be inserted here -->
+            </ul>
+            <button id="validateRemember" class="m-3 btn btn-secondary btn-lg">
+                Validate
+                <span id="nbRememberedKeywords">x</span>
+                /
+                <span id="nbCorrectKeywords">n</span>
+            </button>
+        </div>
+        <div id="endOfRound" style="display: none">
+            Une autre ?<br>
+            <button id="nextRound" class="m-3 btn btn-secondary btn-lg">Prochaine manche</button>
+            <br>
+            <button id="endGame" class="m-3 btn btn-secondary btn-lg">Fin de partie</button>
+        </div>
+    </div>
+</div>
 </body>
 
 <!-- JQUERY -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-	integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-	crossorigin="anonymous"></script>
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
 <!-- POPPER - require by bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-	integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-	crossorigin="anonymous"></script>
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
 <!-- BOOTSTRAP -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-	crossorigin="anonymous"></script>
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 <!-- GOOGLE CAST SENDER -->
 <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+<!-- FONT AWESOME -->
+<script src="https://kit.fontawesome.com/d3075442a5.js" crossorigin="anonymous"></script>
 
 <!-- OUR SCRIPT FILES -->
 <script src="js/sender.js"></script>
