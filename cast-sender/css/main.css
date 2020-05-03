@@ -1,34 +1,62 @@
+html, body {
+    height: 100%;
+    color: white;
+    background: linear-gradient(320deg, #022a55, #3d0011);
+    //background: url("../res/brushed-alum.png"), linear-gradient(320deg, #022a55, #3d0011);
+    background-size: 150% 150%;
+
+    -webkit-animation: AnimationName 17s ease infinite;
+    -moz-animation: AnimationName 17s ease infinite;
+    -o-animation: AnimationName 17s ease infinite;
+    animation: AnimationName 17s ease infinite;
+}
+
+h1{
+    font-size: 3.5rem;
+}
+
+.container-fluid{
+    margin-left: 10%;
+    margin-right: 10%;
+    width: auto;
+}
+
 google-cast-launcher {
-
-    float: right;
-    
-    margin: 10px 6px 14px 0px;
-    
-    width: 40px;
-    
-    height: 32px;
-    
-    opacity: 0.7;
-    
-    background-color: #000;
-    
+    margin: 10px;
+    border-radius: 8px;
+    background-color: white;
     border: none;
-    
     outline: none;
-    
-    }
-    
-    google-cast-launcher:hover {
-    
-    --disconnected-color: white;
-    
-    --connected-color: white;
-    
-    }
+    --disconnected-color: #022a55;
+}
 
-.correctKeyword {border: 1px solid #223}
+google-cast-launcher:hover {
+    --disconnected-color: #022a55;
+    --connected-color: #022a55;
+}
 
 .correctKeyword.remembered {
     font-weight: bold;
     color: green;
+}
+
+@-webkit-keyframes AnimationName {
+    0%{background-position:19% 0%}
+    50%{background-position:82% 100%}
+    100%{background-position:19% 0%}
+}
+@-moz-keyframes AnimationName {
+    0%{background-position:19% 0%}
+    50%{background-position:82% 100%}
+    100%{background-position:19% 0%}
+}
+@-o-keyframes AnimationName {
+    0%{background-position:19% 0%}
+    50%{background-position:82% 100%}
+    100%{background-position:19% 0%}
+}
+@keyframes AnimationName {
+    0%{background-position:19% 0%}
+    50%{background-position:82% 100%}
+    100%{background-position:19% 0%}
 }
