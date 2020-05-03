@@ -325,13 +325,17 @@ function keywordNew() {
     }
     keywordObj = dictionary[dictionaryCursor];
     // replace HTTML
-    $("#keywordText").html(keywordObj[LANGUAGE]);
+    $("#keywordText").html(capitalize(keywordObj[LANGUAGE]));
     // illustration
     //illustrateGiphy(keyword['en']);
     illustratePixabay(keywordObj['en']);
     // Hey Client, here is the new keyword
     sendGameEvent("newKeyword", {keyword: keywordObj[LANGUAGE], keywordId: keywordId});
     dictionaryCursor++
+}
+
+function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
 function keywordRemembered(rememberedKeywordId, remembered) {
