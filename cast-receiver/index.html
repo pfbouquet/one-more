@@ -8,25 +8,25 @@
 </head>
 
 <body>
-<div class="container h-100" id="app">
+<div class="container-fluid h-100 mt-3" id="app">
     <div class="row text-center h-100 mt-2">
         <div id="game" class="col-md-10 h-100">
 
-            <div id="game-instruction" class="h-100 justify-content-center align-items-center">
+            <div id="game-instruction" class="m-3 h-100 justify-content-center align-items-center">
             </div>
 
-            <div id="main-round" class="row" style="display: none">
-                <div id="keywordWrong" class="col-md-2"></div>
-                <div id="keyword" class="col-md-6"></div>
-                <div id="remember" class="col-md-6" style="display: none">St.Thomas, What do you remember from heaven ?</div>
-                <div id="roundScore" class="col-md-6" style="display: none"></div>
-                <div id="keywordCorrect" class="col-md-2"></div>
+            <div id="main-round" class="m-3 row" style="display: none">
+                <div id="keywordWrong" class="mt-2 col-3"></div>
+                <div id="keyword" class="col-6"></div>
+                <h1 id="remember" class="mt-2 col-6" style="display: none">St.Thomas, de quoi te souviens-tu du paradis ?</h1>
+                <div id="roundScore" class="col-6" style="display: none"></div>
+                <div id="keywordCorrect" class="mt-2 col-3"></div>
             </div>
 
         </div>
         <div id="game-infos" class="col-md-2 list-group" style="display: none">
-            <div id="round-info"></div>
-            <div id="leaderBoard"></div>
+            <div id="round-info" class="text-secondary"></div>
+            <div id="leaderBoard" class="mt-3 text-secondary"></div>
         </div>
     </div>
 
@@ -54,6 +54,10 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+
+<!-- FONT AWESOME -->
+<script src="https://kit.fontawesome.com/d3075442a5.js" crossorigin="anonymous"></script>
+
 <script src="js/receiver.js"></script>
 <script src="js/game.js"></script>
 

@@ -150,8 +150,8 @@ function prepareRound() {
     $("#keywordWrong").hide();
 
     // re-init var and html
-    $("#keywordCorrect").html("");
-    $("#keywordWrong").html("");
+    $("#keywordWrong").html("<p class='text-danger'><i class='far fa-times-circle fa-3x'></i></p>");
+    $("#keywordCorrect").html("<p class='text-success'><i class='far fa-check-circle fa-3x'></i></p>");
     keyword = "";
     keywordId = 0;
     keywords = [];
@@ -205,20 +205,20 @@ function getRoles(playerNumber) {
 
 function displayGetReadyMessage() {
     let saintThomas = getSaintThomas();
-    $("#game-instruction").html("<h2>" + saintThomas.name + " you are Saint Thomas for this round. Go blind ! </h2><br/><h4>When Saint Thomas is blind, hit ready ! </h4>")
+    $("#game-instruction").html("<h2><span class='text-primary font-weight-bold'>" + saintThomas.name + "</span> vous êtes Saint Thomas pour cette manche. </h2><br/><h4> Cachez vous les yeux ! </h4>")
     $("#game-instruction").show();
 }
 
 function displayLaunchGame() {
     updatePlayerList(true);
-    $("#game-instruction").html("<h2>Watch your personal role for this round. </h2><br/><h4>When everyone is ready, click on the button the start the round ! </h4>")
+    $("#game-instruction").html("<h2>Retenez votre role pour cette manche. </h2><br/><h4>Quand tout le monde est prêt, lancez la manche</h4>")
     $("#game-instruction").show();
 }
 
 function displayRoundScore() {
     let roundScoreDiv = $("#roundScore");
 
-    roundScoreDiv.html("<h2>Round Score:</h2><br/>");
+    roundScoreDiv.html("<h2>Scores de la manche:</h2><br/>");
     roundScoreDiv.append("</br><h4 class='alert alert-danger'>" + ROLE_DEVIL + ": + " + devilScore + "</h4>");
     roundScoreDiv.append("</br><h4 class='alert alert-success'>" + ROLE_ANGEL + ": + " + angelScore + "</h4>");
     roundScoreDiv.append("</br><h4 class='alert alert-warning'>" + ROLE_TURNCOAT + ": + " + turncoatScore + "</h4>");
@@ -241,7 +241,7 @@ function updatePlayerList(showPlayerRole = false) {
     let leaderBoard = $('#leaderBoard');
     let playerList = $('<div/>', {'class': 'list-group'});
     leaderBoard.html("");
-    leaderBoard.append("<h4>Leaderboard (" + playerArray.length + ")</h4>");
+    leaderBoard.append("<h4>Classement (" + playerArray.length + ")</h4>");
     for (const [key, player] of playerArray) {
         let contextualClass = "";
         let name = player.name;
@@ -273,7 +273,7 @@ function updatePlayerList(showPlayerRole = false) {
 }
 
 function updateRoundNumber() {
-    $('#round-info').html("<h4>round " + roundNumber + "</h4>");
+    $('#round-info').html("<h4>Manche " + roundNumber + "</h4><div class=\"border border-top border-secondary\"></div>");
 }
 
 function getSortedPlayerArray() {
@@ -307,13 +307,13 @@ function startRound() {
  * keyword management
  */
 function keywordCorrect() {
-    $("#keywordCorrect").append("<p id='"+keywordId+"' class='keyword correctKeyword'>" + keyword + "</p>");
+    $("#keywordCorrect").append("<h4 id='"+keywordId+"' class='keyword correctKeyword'>" + keyword + "</h4>");
     keywords.push({keywordId: keywordId, keyword: keyword, found: true, remembered: false});
     keywordNew();
 }
 
 function keywordWrong() {
-    $("#keywordWrong").append("<p id='"+keywordId+"' class='keyword wrongKeyword'>" + keyword + "</p>");
+    $("#keywordWrong").append("<h4 id='"+keywordId+"' class='keyword wrongKeyword'>" + keyword + "</h4>");
     keywords.push({keywordId: keywordId, keyword: keyword, found: false, remembered: false});
     keywordNew();
 }
@@ -326,7 +326,7 @@ function keywordNew() {
     }
     keyword = dictionary[dictionaryCursor];
     // replace HTTML
-    $("#keyword").html("<p id='"+keywordId+"' class='keyword'>"+keyword+"</p>");
+    $("#keyword").html("<h1 id='"+keywordId+"' class='keyword font-weight-bold'>"+keyword+"</h1>");
     keywordGif(keyword);
     sendGameEvent("newKeyword", {keyword: keyword, keywordId: keywordId});
     dictionaryCursor++
