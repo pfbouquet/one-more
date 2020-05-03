@@ -1,6 +1,6 @@
-const ROLE_ANGEL = "Angel";
-const ROLE_DEVIL = "Devil";
-const ROLE_TURNCOAT = "Turncoat";
+const ROLE_ANGEL = "Ange";
+const ROLE_DEVIL = "Démon";
+const ROLE_TURNCOAT = "Médiateur";
 const ROLE_SAINT_THOMAS = "Saint Thomas";
 
 let players = {};

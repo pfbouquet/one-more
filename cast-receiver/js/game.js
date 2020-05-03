@@ -1,11 +1,11 @@
 const MODE = 'prod';
 
 const MINIMUM_PLAYER = 4;
-const ROUND_DURATION = 10*1000;
+const ROUND_DURATION = 10 * 1000;
 
-const ROLE_ANGEL = "Angel";
-const ROLE_DEVIL = "Devil";
-const ROLE_TURNCOAT = "Turncoat";
+const ROLE_ANGEL = "Ange";
+const ROLE_DEVIL = "Démon";
+const ROLE_TURNCOAT = "Médiateur";
 const ROLE_SAINT_THOMAS = "Saint Thomas";
 
 let dictionary = [];
@@ -34,7 +34,7 @@ function sendGameEvent(eventName, infos) {
 }
 
 function loadDictionary(mode) {
-    $.getJSON('data/dictionary/'+mode+'.json', function(json) {
+    $.getJSON('data/dictionary/' + mode + '.json', function (json) {
         dictionary = json.keywords;
         shuffle(dictionary);
     });
@@ -122,7 +122,7 @@ function startGame(__players) {
         }
 
         if (Object.keys(players).length < MINIMUM_PLAYER) {
-            throw new Error("Must have "+MINIMUM_PLAYER+" players or more.");
+            throw new Error("Must have " + MINIMUM_PLAYER + " players or more.");
         }
 
         roundNumber = 0;
@@ -165,7 +165,7 @@ function prepareRound() {
     shuffle(roles);
 
     for (const [key, player] of Object.entries(players)) {
-        if (roundNumber === player.dreamerOrder) {
+        if (((roundNumber % Object.entries(players)) + 1) === player.dreamerOrder) {
             players[key].role = ROLE_SAINT_THOMAS;
         } else {
             players[key].role = roles[roleNumber];
@@ -244,7 +244,7 @@ function updatePlayerList(showPlayerRole = false) {
     for (const [key, player] of playerArray) {
         let contextualClass = "";
         let name = player.name;
-        if(showPlayerRole) {
+        if (showPlayerRole) {
             switch (player.role) {
                 case ROLE_TURNCOAT:
                     contextualClass = "list-group-item-warning";
@@ -306,19 +306,19 @@ function startRound() {
  * keyword management
  */
 function keywordCorrect() {
-    $("#keywordCorrect").append("<h4 id='"+keywordId+"' class='keyword correctKeyword'>" + keywordObj[LANGUAGE] + "</h4>");
+    $("#keywordCorrect").append("<h4 id='" + keywordId + "' class='keyword correctKeyword'>" + keywordObj[LANGUAGE] + "</h4>");
     keywords.push({keywordId: keywordId, keyword: keywordObj[LANGUAGE], found: true, remembered: false});
     keywordNew();
 }
 
 function keywordWrong() {
-    $("#keywordWrong").append("<h4 id='"+keywordId+"' class='keyword wrongKeyword'>" + keywordObj[LANGUAGE] + "</h4>");
+    $("#keywordWrong").append("<h4 id='" + keywordId + "' class='keyword wrongKeyword'>" + keywordObj[LANGUAGE] + "</h4>");
     keywords.push({keywordId: keywordId, keyword: keywordObj[LANGUAGE], found: false, remembered: false});
     keywordNew();
 }
 
 function keywordNew() {
-    keywordId ++;
+    keywordId++;
     if (dictionaryCursor >= dictionary.length) {
         dictionaryCursor = 0;
         shuffle(dictionary);
@@ -352,10 +352,9 @@ function keywordRemembered(rememberedKeywordId, remembered) {
         } else {
             elmtRememberedKeyword.removeClass('remembered')
         }
-    }
-    else {
+    } else {
         // Throw error
-        throw new Error(rememberedKeywordId+" not found in keywords list.");
+        throw new Error(rememberedKeywordId + " not found in keywords list.");
     }
 }
 
@@ -367,13 +366,12 @@ function calculateScore() {
         let remembered = 0;
 
         for (let i = 0; i < keywords.length; i++) {
-            if(keywords[i].found) {
+            if (keywords[i].found) {
                 correct++;
-                if(keywords[i].remembered) {
+                if (keywords[i].remembered) {
                     remembered++;
                 }
-            }
-            else {
+            } else {
                 wrong++;
             }
         }
@@ -455,9 +453,9 @@ function progressMove() {
             timeIsOver();
         } else {
             progressTimer = progressTimer + step;
-            progressWidth = 100 * progressTimer/ROUND_DURATION;
+            progressWidth = 100 * progressTimer / ROUND_DURATION;
             elemBar.style.width = progressWidth + '%';
-            elemCount.innerHTML = parseInt((ROUND_DURATION - progressTimer)/1000, 10) + 's';
+            elemCount.innerHTML = parseInt((ROUND_DURATION - progressTimer) / 1000, 10) + 's';
         }
     }
 }

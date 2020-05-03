@@ -5,12 +5,14 @@ function illustratePixabay(keyword) {
 
     let url = PIXABAY_URL_BASE + "&q="+encodeURIComponent(keyword);
 
+    $("#keywordIllustration").hide();
     $.getJSON(url, function(data){
         if (parseInt(data.totalHits) > 0) {
             let offset = getRandomInt(Math.min(20,parseInt(data.totalHits)));
             let illustrationUrl = data.hits[offset].webformatURL;
             console.log('Pixabay illustration for ' + keyword + ': ' + illustrationUrl);
             $("#keywordIllustration").attr('src', illustrationUrl);
+            $("#keywordIllustration").show();
         }
         else {
             console.log('No hits');
