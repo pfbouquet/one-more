@@ -1,3 +1,5 @@
+const MODE = 'prod';
+
 const MINIMUM_PLAYER = 4;
 const ROUND_DURATION = 10*1000;
 
@@ -6,14 +8,13 @@ const ROLE_DEVIL = "Devil";
 const ROLE_TURNCOAT = "Turncoat";
 const ROLE_SAINT_THOMAS = "Saint Thomas";
 
-const GIPHY_API_KEY = '6zRQ8OiObokf7ql3Ez21CgNu8ljMGosp';
-
 let dictionary = [];
 let dictionaryCursor = 0;
+const LANGUAGE = 'fr';
 
 let players;
 let roundNumber;
-let keyword;
+let keywordObj;
 let keywordId = 0;
 let keywords = [];
 
@@ -33,12 +34,10 @@ function sendGameEvent(eventName, infos) {
 }
 
 function loadDictionary(mode) {
-    fetch('data/dictionary/'+mode+'.txt') // fetch text file
-        .then((resp) => resp.text())
-        .then(data => {
-            dictionary = data.split(/\r?\n/);
-            shuffle(dictionary);
-        })
+    $.getJSON('data/dictionary/'+mode+'.json', function(json) {
+        dictionary = json.keywords;
+        shuffle(dictionary);
+    });
 }
 
 /**
@@ -114,7 +113,7 @@ function handleGameEvent(data) {
  */
 function startGame(__players) {
     // Load dictionary
-    loadDictionary('debug');
+    loadDictionary(MODE);
     // Load players and init round 1
     try {
         players = __players;
@@ -307,14 +306,14 @@ function startRound() {
  * keyword management
  */
 function keywordCorrect() {
-    $("#keywordCorrect").append("<p id='"+keywordId+"' class='keyword correctKeyword'>" + keyword + "</p>");
-    keywords.push({keywordId: keywordId, keyword: keyword, found: true, remembered: false});
+    $("#keywordCorrect").append("<p id='"+keywordId+"' class='keyword correctKeyword'>" + keywordObj[LANGUAGE] + "</p>");
+    keywords.push({keywordId: keywordId, keyword: keywordObj[LANGUAGE], found: true, remembered: false});
     keywordNew();
 }
 
 function keywordWrong() {
-    $("#keywordWrong").append("<p id='"+keywordId+"' class='keyword wrongKeyword'>" + keyword + "</p>");
-    keywords.push({keywordId: keywordId, keyword: keyword, found: false, remembered: false});
+    $("#keywordWrong").append("<p id='"+keywordId+"' class='keyword wrongKeyword'>" + keywordObj[LANGUAGE] + "</p>");
+    keywords.push({keywordId: keywordId, keyword: keywordObj[LANGUAGE], found: false, remembered: false});
     keywordNew();
 }
 
@@ -324,11 +323,14 @@ function keywordNew() {
         dictionaryCursor = 0;
         shuffle(dictionary);
     }
-    keyword = dictionary[dictionaryCursor];
+    keywordObj = dictionary[dictionaryCursor];
     // replace HTTML
-    $("#keyword").html("<p id='"+keywordId+"' class='keyword'>"+keyword+"</p>");
-    keywordGif(keyword);
-    sendGameEvent("newKeyword", {keyword: keyword, keywordId: keywordId});
+    $("#keywordText").html(keywordObj[LANGUAGE]);
+    // illustration
+    //illustrateGiphy(keyword['en']);
+    illustratePixabay(keywordObj['en']);
+    // Hey Client, here is the new keyword
+    sendGameEvent("newKeyword", {keyword: keywordObj[LANGUAGE], keywordId: keywordId});
     dictionaryCursor++
 }
 
@@ -355,24 +357,6 @@ function keywordRemembered(rememberedKeywordId, remembered) {
         // Throw error
         throw new Error(rememberedKeywordId+" not found in keywords list.");
     }
-}
-
-function keywordGif(keyword) {
-
-    let offset = getRandomInt(10);
-    // get and display image
-    fetch('https://api.giphy.com/v1/gifs/search?api_key='+GIPHY_API_KEY+'&q='+keyword+'&limit=1&offset='+offset+'&rating=G&lang=fr')
-        .then(data => {
-            return data.json()
-        })
-        .then(res => {
-            gif_url = res.data[0].images.fixed_height.url;
-            console.log('Gif for ' + keyword + ': ' + gif_url);
-            $("#keyword").append('</br>' + "<img src=\"" + gif_url + "\"/>");
-        })
-        .catch(error => {
-            console.log(error)
-        })
 }
 
 function calculateScore() {

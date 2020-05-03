@@ -1,0 +1,20 @@
+{
+  "dictionary": "debug",
+  "keywords": [
+    {
+      "id": 1,
+      "fr": "Chinnois",
+      "en": "Chinese"
+    },
+    {
+      "id": 2,
+      "fr": "The Voice",
+      "en": "The Voice"
+    },
+    {
+      "id": 3,
+      "fr": "Tracteur",
+      "en": "Tractor"
+    }
+  ]
+}
