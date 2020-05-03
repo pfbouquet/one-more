@@ -1,7 +1,7 @@
 const MODE = 'prod';
 
 const MINIMUM_PLAYER = 4;
-const ROUND_DURATION = 10 * 1000;
+const ROUND_DURATION = 120 * 1000;
 
 const ROLE_ANGEL = "Ange";
 const ROLE_DEVIL = "Démon";
@@ -165,7 +165,7 @@ function prepareRound() {
     shuffle(roles);
 
     for (const [key, player] of Object.entries(players)) {
-        if (((roundNumber % Object.entries(players)) + 1) === player.dreamerOrder) {
+        if ((((roundNumber -1) % Object.entries(players).length) + 1) === player.dreamerOrder) {
             players[key].role = ROLE_SAINT_THOMAS;
         } else {
             players[key].role = roles[roleNumber];

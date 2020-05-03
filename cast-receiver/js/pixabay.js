@@ -5,6 +5,7 @@ function illustratePixabay(keyword) {
 
     let url = PIXABAY_URL_BASE + "&q="+encodeURIComponent(keyword);
 
+    $("#keywordIllustration").removeAttr("src");
     $("#keywordIllustration").hide();
     $.getJSON(url, function(data){
         if (parseInt(data.totalHits) > 0) {
