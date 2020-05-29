@@ -83,6 +83,10 @@ function handleGameEvent(data) {
             updatePlayerList(true);
             displayRoundScore();
             break;
+        case "penalize":
+            penalize(data.playerKey);
+            updatePlayerList(true);
+            break;
         case "endGame":
             // Hide game
             $("#game-infos").hide();
@@ -362,6 +366,9 @@ function keywordRemembered(rememberedKeywordId, remembered) {
     }
 }
 
+/**
+ * score management
+ */
 function calculateScore() {
     for (const [key, player] of Object.entries(players)) {
         console.log("calculate score");
@@ -423,6 +430,12 @@ function calculateScore() {
         }
     }
 }
+
+function penalize(playerKey) {
+    players[playerKey] += -1;
+    console.log(playerKey + " Has been penalized: -1");
+}
+
 
 /**
  * Round time management

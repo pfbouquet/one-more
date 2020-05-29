@@ -50,7 +50,7 @@
             <button id="startRoundBtn" class="m-3 btn btn-secondary btn-lg">GO !</button>
         </div>
         <div id="roundKeyword" style="display: none">
-            <h2 class="mt-3" id="keyword"></h2>
+            <h2 id="keyword" class="mt-3"></h2>
             <div class="row m-5">
                 <div id="wrong" class="col-6 text-danger">
                     <i class="far fa-times-circle fa-10x"></i>
@@ -61,6 +61,13 @@
             </div>
             <button id="pause" class="m-3 btn btn-secondary btn-lg">Pause</button>
             <button id="resume" style="display: none;" class="m-3 btn btn-secondary btn-lg">Reprendre</button>
+            <button id="penalty" class="m-3 btn btn-secondary btn-lg">Carton rouge !</button>
+            <div id="penaltyStep2" style="display: none">
+                <div id="penaltyPlayers" class="m-3">
+                    <!-- Player list will be inserted here -->
+                </div>
+                <button id="penaltyCancel" class="m-3 btn btn-secondary btn-lg">Annuler</button>
+            </div>
         </div>
         <div id="roundRemember" style="display: none">
             <h2>Saint Thomas se souvient de...</h2>

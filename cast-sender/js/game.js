@@ -70,10 +70,11 @@ function startGame() {
 function handleRoundInfo(data) {
     players = data.players;
     console.log(players);
-    let saintThomas = getSaintThomas();
+    $("#penaltyPlayers").html("");
     $("#playerForm").hide();
-    $("#stThomasReady").show();
+    let saintThomas = handlePlayerRoles();
     $("#stThomasReadyMsg").html("<h3 class='mt-5'>" + saintThomas.name + " devient Saint-Thomas pour cette manche</h3><br/><h4>Quand il/elle s'est caché·e les yeux, cliquez sur le bouton</h4>");
+    $("#stThomasReady").show();
 }
 
 function roundTimeIsOver(k) {
@@ -124,13 +125,30 @@ function roundIsOver() {
 
 }
 
-function getSaintThomas() {
+function handlePlayerRoles() {
+    let saintThomas = "";
     for (const [key, player] of Object.entries(players)) {
         if (player.role === ROLE_SAINT_THOMAS) {
-            return player;
+            saintThomas = player;
+        }
+        else {
+            $("#penaltyPlayers").append("<li id='"+key+"' class='list-group-item list-group-item-light player' onclick=penalizePlayer(this)>"+player['name']+"</li>")
         }
     }
+    return saintThomas
 }
+
+function penalizePlayer(player) {
+    sendGameEvent("penalize", {keyword: keyword, playerKey: $(player).attr('id')});
+    sendGameEvent("progressResume", {});
+    $('#correct').show();
+    $('#wrong').show();
+    $('#pause').show();
+    $('#resume').hide();
+    $('#penalty').show();
+    $('#penaltyStep2').hide();
+}
+
 
 // MACRO GAME EVENTS
 $('#startGame').on("click", startGame);
@@ -139,11 +157,11 @@ $('#nextRound').on("click", nextRound);
 
 // ROUND EVENTS
 // St thomas ready click
-    $("#stThomasReadyBtn").on("click", function () {
-        sendGameEvent("saint-thomas-blind", {});
-        $("#stThomasReady").hide();
-        $("#startRound").show();
-    });
+$("#stThomasReadyBtn").on("click", function () {
+    sendGameEvent("saint-thomas-blind", {});
+    $("#stThomasReady").hide();
+    $("#startRound").show();
+});
 
 // Start round click;
 $("#startRoundBtn").on("click", function () {
@@ -171,8 +189,27 @@ $('#resume').on("click", function () {
     sendGameEvent("progressResume", {});
     $('#correct').show();
     $('#wrong').show();
+    $('#pause').show();
     $('#resume').hide();
-    $('#pause').show()
+});
+
+$('#penalty').on("click", function () {
+    sendGameEvent("progressPause", {});
+    $('#correct').hide();
+    $('#wrong').hide();
+    $('#resume').hide();
+    $('#pause').hide();
+    $('#penalty').hide();
+    $('#penaltyStep2').show()
+});
+$('#penaltyCancel').on("click", function () {
+    sendGameEvent("progressResume", {});
+    $('#correct').show();
+    $('#wrong').show();
+    $('#resume').hide();
+    $('#pause').show();
+    $('#penalty').show();
+    $('#penaltyStep2').hide()
 });
 
 // Add click sensor to trip end of round
