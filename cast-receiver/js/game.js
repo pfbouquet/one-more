@@ -1,7 +1,7 @@
 const MODE = 'prod';
 
 const MINIMUM_PLAYER = 4;
-const ROUND_DURATION = 120 * 1000;
+const ROUND_DURATION = 2 * 5 * 1000;
 
 const ROLE_ANGEL = "Ange";
 const ROLE_DEVIL = "Démon";
@@ -432,7 +432,7 @@ function calculateScore() {
 }
 
 function penalize(playerKey) {
-    players[playerKey] += -1;
+    players[playerKey].score += -1;
     console.log(playerKey + " Has been penalized: -1");
 }
 
