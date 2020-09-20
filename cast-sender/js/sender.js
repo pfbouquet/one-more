@@ -106,7 +106,7 @@ function sendData(eventType, eventData) {
 }
 
 function sendSound(mediaContentURL) {
-    console.log("Send sound " . mediaContentURL);
+    console.log("Send sound " + mediaContentURL);
     let castSession = cast.framework.CastContext.getInstance().getCurrentSession();
 
     var mediaInfo = new chrome.cast.media.MediaInfo(mediaContentURL, "audio/mpeg");
