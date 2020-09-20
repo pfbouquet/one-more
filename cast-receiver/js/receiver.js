@@ -17,6 +17,7 @@ context.addCustomMessageListener(NAMESPACE, function (customEvent) {
             break;
         case "game":
             console.log(customEvent.data.eventData);
+            console.log("PLAY SOUND");
             handleGameEvent(customEvent.data.eventData);
             break;
         default:
@@ -35,7 +36,38 @@ context.addEventListener(cast.framework.system.EventType.READY, function (event)
     context.setApplicationState('one more is ready...');
 });
 
+// Start Options
 context.start(options);
+
+
+const playbackConfig = new cast.framework.PlaybackConfig();
+playbackConfig.manifestRequestHandler = requestInfo => {
+    requestInfo.withCredentials = true;
+};
+
+// Start Playback configuration
+context.start({playbackConfig: playbackConfig});
+
+const playerManager = cast.framework.CastReceiverContext.getInstance().getPlayerManager();
+
+playerManager.addEventListener(cast.framework.events.EventType.MEDIA_STATUS, (event) => {
+    console.log(event)
+});
+
+playerManager.setMessageInterceptor(cast.framework.messages.MessageType.LOAD, loadRequestData => {
+    if (!loadRequestData.media.entity) {
+        // Copy the value from contentId for legacy reasons if needed
+        loadRequestData.media.entity = loadRequestData.media.contentId;
+    }
+
+    return thirdparty.fetchAssetAndAuth(loadRequestData.media.entity,
+        loadRequestData.credentials)
+        .then(asset => {
+            loadRequestData.media.contentUrl = asset.url;
+            return loadRequestData;
+        });
+});
+
 
 function handleTextMessage(data) {
     if (data.text != null) {

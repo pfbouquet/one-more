@@ -3,6 +3,12 @@ const ROLE_DEVIL = "Démon";
 const ROLE_TURNCOAT = "Médiateur";
 const ROLE_SAINT_THOMAS = "Saint Thomas";
 
+// DEV
+// const GAME_SOUND_URL = "https://e86a38dfc2e0.ngrok.io/res/audio/";
+
+// PROD
+const GAME_SOUND_URL = "https://pfbouquet.github.io/one-more/res/audio";
+
 let players = {};
 let keywords = [];
 
@@ -54,6 +60,11 @@ function sendGameEvent(eventName, infos) {
     sendData("game", infos)
 }
 
+function sendGameSound(soundName) {
+    var url = GAME_SOUND_URL + soundName;
+    sendSound(url);
+}
+
 function startGame() {
     players = {};
     for (let step = 1; step <= 7; step++) {
@@ -75,9 +86,12 @@ function handleRoundInfo(data) {
     let saintThomas = handlePlayerRoles();
     $("#stThomasReadyMsg").html("<h3 class='mt-5'>" + saintThomas.name + " devient Saint-Thomas pour cette manche</h3><br/><h4>Quand il/elle s'est caché·e les yeux, cliquez sur le bouton</h4>");
     $("#stThomasReady").show();
+    sendGameSound("start.mp3");
 }
 
 function roundTimeIsOver(k) {
+    sendGameSound("start.mp3");
+
     keywords = k;
     let elmtCorrectKeywords = $("#correctKeywords");
 
@@ -122,7 +136,7 @@ function roundIsOver() {
     $("#correctKeywords").html("");
     $("#roundRemember").hide();
     $("#endOfRound").show();
-
+    sendGameSound("start.mp3");
 }
 
 function handlePlayerRoles() {
@@ -147,6 +161,7 @@ function penalizePlayer(player) {
     $('#resume').hide();
     $('#penalty').show();
     $('#penaltyStep2').hide();
+    sendGameSound("wrong.mp3");
 }
 
 
@@ -161,6 +176,7 @@ $("#stThomasReadyBtn").on("click", function () {
     sendGameEvent("saint-thomas-blind", {});
     $("#stThomasReady").hide();
     $("#startRound").show();
+    sendGameSound("start.mp3");
 });
 
 // Start round click;
@@ -168,13 +184,17 @@ $("#startRoundBtn").on("click", function () {
     $("#startRound").hide();
     sendGameEvent("start-round", {});
     $("#roundKeyword").show();
+    sendGameSound("start.mp3");
 });
 
 $('#correct').on('click', function() {
     sendGameEvent("correct", {})
+    sendGameSound("pop.mp3");
 });
+
 $('#wrong').on('click', function () {
     sendGameEvent("wrong", {})
+    sendGameSound("pop.mp3");
 });
 
 // Timing management

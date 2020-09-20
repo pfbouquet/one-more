@@ -1,3 +1,7 @@
+cast-media-player{
+    display: none;
+}
+
 html, body {
     height: 100%;
     color: white;
@@ -34,3 +38,4 @@ html, body {
     50%{background-position:82% 100%}
     100%{background-position:19% 0%}
 }
+

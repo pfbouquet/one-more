@@ -5,7 +5,7 @@
 // Prod
 const applicationID = '90E7072E';
 // Constant
-//const applicationID = '41EF74CE';
+// const applicationID = '41EF74CE';
 // PF
 //const applicationID = '220A8BDE';
 
@@ -54,7 +54,7 @@ function initializeCastApi() {
     console.log("Initializing with applicationID=" + applicationID);
     cast.framework.CastContext.getInstance().setOptions({
         receiverApplicationId: applicationID,
-        autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+        autoJoinPolicy: chrome.cast.AutoJoinPolicy.PAGE_SCOPED
     });
 }
 
@@ -103,9 +103,17 @@ function sendData(eventType, eventData) {
             onError(e);
         });
     }
-    else {
+}
 
-    }
+function sendSound(mediaContentURL) {
+    console.log("Send sound " . mediaContentURL);
+    let castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+
+    var mediaInfo = new chrome.cast.media.MediaInfo(mediaContentURL, "audio/mpeg");
+    var request = new chrome.cast.media.LoadRequest(mediaInfo);
+    castSession.loadMedia(request).then(
+        function() { console.log('Load succeed'); },
+        function(errorCode) { console.log('Error code: ' + errorCode); });
 }
 
 function stopApp() {

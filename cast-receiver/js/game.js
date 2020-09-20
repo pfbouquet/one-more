@@ -1,7 +1,7 @@
 const MODE = 'prod';
 
 const MINIMUM_PLAYER = 4;
-const ROUND_DURATION = 2 * 5 * 1000;
+const ROUND_DURATION = 60 * 1000;
 
 const ROLE_ANGEL = "Ange";
 const ROLE_DEVIL = "Démon";
