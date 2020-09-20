@@ -7,7 +7,7 @@ const ROLE_SAINT_THOMAS = "Saint Thomas";
 // const GAME_SOUND_URL = "https://e86a38dfc2e0.ngrok.io/res/audio/";
 
 // PROD
-const GAME_SOUND_URL = "https://pfbouquet.github.io/one-more/res/audio/";
+const GAME_SOUND_URL = "https://pfbouquet.github.io/one-more/cast-sender/res/audio/";
 
 let players = {};
 let keywords = [];
